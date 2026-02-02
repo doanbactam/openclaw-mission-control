@@ -4,6 +4,7 @@ import { useState } from "react";
 
 function SignInForm() {
 	const { signIn } = useAuthActions();
+	const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
 	const [error, setError] = useState<string | null>(null);
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -20,7 +21,9 @@ function SignInForm() {
 						Mission Control
 					</h1>
 					<p className="mt-2 text-sm text-muted-foreground font-medium">
-						Welcome back, Commander.
+						{flow === "signIn"
+							? "Welcome back, Commander."
+							: "New Personnel Registration"}
 					</p>
 				</div>
 
@@ -30,7 +33,7 @@ function SignInForm() {
 						onSubmit={(e) => {
 							e.preventDefault();
 							const formData = new FormData(e.target as HTMLFormElement);
-							formData.set("flow", "signIn");
+							formData.set("flow", flow);
 							void signIn("password", formData).catch((error) => {
 								setError(error.message);
 							});
@@ -88,15 +91,27 @@ function SignInForm() {
 							className="w-full bg-foreground text-background font-bold py-3 px-4 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all shadow-md uppercase tracking-widest cursor-pointer"
 							type="submit"
 						>
-							Execute Login
+							{flow === "signIn" ? "Execute Login" : "Initialize Account"}
 						</button>
+
+						<div className="text-center">
+							<button
+								type="button"
+								className="text-xs font-medium text-muted-foreground hover:text-foreground underline underline-offset-4 cursor-pointer"
+								onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
+							>
+								{flow === "signIn"
+									? "No credentials? Initialize new account."
+									: "Already registered? Execute login."}
+							</button>
+						</div>
 
 						{error && (
 							<div className="mt-4 animate-in fade-in slide-in-from-top-2">
 								<div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 flex items-start gap-3">
 									<span className="text-destructive text-lg">⚠️</span>
 									<p className="text-foreground/80 font-mono text-xs leading-relaxed pt-1">
-										Invalid credentials provided.
+										{error}
 									</p>
 								</div>
 							</div>

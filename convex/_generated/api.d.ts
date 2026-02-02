@@ -9,21 +9,23 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as fix_loki from "../fix_loki.js";
 import type * as http from "../http.js";
 import type * as queries from "../queries.js";
 import type * as seed from "../seed.js";
 
 import type {
-	ApiFromModules,
-	FilterApi,
-	FunctionReference,
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-	auth: typeof auth;
-	http: typeof http;
-	queries: typeof queries;
-	seed: typeof seed;
+  auth: typeof auth;
+  fix_loki: typeof fix_loki;
+  http: typeof http;
+  queries: typeof queries;
+  seed: typeof seed;
 }>;
 
 /**
@@ -35,8 +37,8 @@ declare const fullApi: ApiFromModules<{
  * ```
  */
 export declare const api: FilterApi<
-	typeof fullApi,
-	FunctionReference<any, "public">
+  typeof fullApi,
+  FunctionReference<any, "public">
 >;
 
 /**
@@ -48,8 +50,8 @@ export declare const api: FilterApi<
  * ```
  */
 export declare const internal: FilterApi<
-	typeof fullApi,
-	FunctionReference<any, "internal">
+  typeof fullApi,
+  FunctionReference<any, "internal">
 >;
 
 export declare const components: {};
