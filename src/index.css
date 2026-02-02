@@ -188,21 +188,18 @@
 	width: 100vw;
 }
 
-/* Mobile layout: collapse 3-column grid into a single column.
- * Keeps desktop unchanged while making content usable on small screens.
+/* Mobile layout: collapse into header + main only.
+ * Sidebars become off-canvas drawers controlled by React state.
  */
 @media (max-width: 768px) {
 	.app-container {
 		grid-template-areas:
 			"header"
-			"main"
-			"left-sidebar"
-			"right-sidebar";
+			"main";
 		grid-template-columns: 1fr;
-		grid-template-rows: var(--header-height) minmax(0, 1fr) auto auto;
+		grid-template-rows: var(--header-height) minmax(0, 1fr);
 		height: 100dvh;
-		overflow-x: hidden;
-		overflow-y: auto;
+		overflow: hidden;
 	}
 
 	/* Prevent grid children from forcing horizontal overflow */
@@ -210,10 +207,40 @@
 		min-width: 0;
 	}
 
-	/* Sidebars become stacked sections with reasonable max height */
-	.\[grid-area\:left-sidebar\],
-	.\[grid-area\:right-sidebar\] {
-		max-height: 70dvh;
+	.drawer-backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.35);
+		backdrop-filter: blur(1px);
+		z-index: 40;
+	}
+
+	.sidebar-drawer {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		height: 100dvh;
+		z-index: 50;
+		max-width: 92vw;
+		box-shadow: var(--shadow-lg);
+		transition: transform 220ms ease;
+		will-change: transform;
+	}
+
+	.sidebar-drawer--left {
+		left: 0;
+		width: var(--sidebar-left-width);
+		transform: translateX(-100%);
+	}
+
+	.sidebar-drawer--right {
+		right: 0;
+		width: var(--sidebar-right-width);
+		transform: translateX(100%);
+	}
+
+	.sidebar-drawer.is-open {
+		transform: translateX(0);
 	}
 }
 

@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SignOutButton from "./Signout";
 
-const Header: React.FC = () => {
+type HeaderProps = {
+	onOpenAgents?: () => void;
+	onOpenLiveFeed?: () => void;
+};
+
+const Header: React.FC<HeaderProps> = ({ onOpenAgents, onOpenLiveFeed }) => {
 	const [time, setTime] = useState(new Date());
 
 	useEffect(() => {
@@ -30,7 +35,17 @@ const Header: React.FC = () => {
 
 	return (
 		<header className="[grid-area:header] flex items-center justify-between px-3 md:px-6 bg-white border-b border-border z-10">
-			<div className="flex items-center gap-3 md:gap-4 min-w-0">
+			<div className="flex items-center gap-2 md:gap-4 min-w-0">
+				<div className="flex md:hidden items-center gap-2">
+					<button
+						type="button"
+						className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted hover:bg-accent transition-colors"
+						onClick={onOpenAgents}
+						aria-label="Open agents sidebar"
+					>
+						<span aria-hidden="true">☰</span>
+					</button>
+				</div>
 				<div className="flex items-center gap-2 min-w-0">
 					<span className="text-2xl text-[var(--accent-orange)]">◇</span>
 					<h1 className="text-base md:text-lg font-semibold tracking-wider text-foreground truncate">
@@ -58,9 +73,17 @@ const Header: React.FC = () => {
 				</div>
 			</div>
 
-			<div className="flex items-center gap-3 md:gap-6">
+			<div className="flex items-center gap-2 md:gap-6">
 				<button className="hidden md:flex items-center gap-1.5 bg-muted hover:bg-accent border-none px-4 py-2 rounded-lg text-sm font-medium cursor-pointer text-foreground transition-colors">
 					<span className="text-base">📚</span> Docs
+				</button>
+				<button
+					type="button"
+					className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted hover:bg-accent transition-colors"
+					onClick={onOpenLiveFeed}
+					aria-label="Open live feed sidebar"
+				>
+					<span aria-hidden="true">☰</span>
 				</button>
 				<div className="text-right">
 					<div className="text-xl font-semibold text-foreground tabular-nums">
