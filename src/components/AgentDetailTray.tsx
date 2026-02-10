@@ -44,18 +44,18 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 		if (!agentId) return;
 		setSaving(true);
 		try {
-				await updateAgent({
-					id: agentId,
+			await updateAgent({
+				id: agentId,
 				name: editName,
 				role: editRole,
 				level: editLevel,
 				avatar: editAvatar,
 				status: editStatus,
-					systemPrompt: editSystemPrompt,
-					character: editCharacter,
-					lore: editLore,
-					tenantId: DEFAULT_TENANT_ID,
-				});
+				systemPrompt: editSystemPrompt,
+				character: editCharacter,
+				lore: editLore,
+				tenantId: DEFAULT_TENANT_ID,
+			});
 			setIsEditing(false);
 		} finally {
 			setSaving(false);
@@ -78,19 +78,46 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 
 	const isOpen = agentId !== null;
 
+	/* Shared input styles — dark mode */
+	const inputCls = "w-full bg-secondary text-foreground border border-border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--accent-blue)] placeholder:text-muted-foreground/40";
+	const textareaCls = `${inputCls} resize-none`;
+	const selectCls = "text-[10px] font-semibold px-2 py-1 rounded border border-border bg-secondary text-foreground focus:outline-none focus:ring-1 focus:ring-[var(--accent-blue)]";
+
+	const levelBgColor = (level: string) => {
+		switch (level) {
+			case "LEAD": return "oklch(0.92 0.04 250)";
+			case "INT": return "oklch(0.92 0.04 155)";
+			case "SPC": return "oklch(0.92 0.03 65)";
+			default: return "oklch(0.93 0 0)";
+		}
+	};
+
+	const levelTextColor = (level: string) => {
+		switch (level) {
+			case "LEAD": return "oklch(0.45 0.15 250)";
+			case "INT": return "oklch(0.45 0.15 155)";
+			case "SPC": return "oklch(0.5 0.12 65)";
+			default: return "oklch(0.5 0 0)";
+		}
+	};
+
 	return (
 		<div className={`agent-tray ${isOpen ? "is-open" : ""}`}>
 			{agent && (
 				<div className="flex flex-col h-full">
 					{/* Header */}
-					<div className="flex items-center justify-between px-5 py-4 border-b border-border">
-						<h2 className="text-sm font-bold tracking-wide text-foreground">
+					<div className="flex items-center justify-between px-5 py-3.5 border-b border-border">
+						<h2
+							className="text-xs font-semibold text-muted-foreground uppercase"
+							style={{ letterSpacing: "0.08em" }}
+						>
 							Agent Details
 						</h2>
 						<button
 							type="button"
 							onClick={onClose}
-							className="inline-flex h-7 w-7 items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground"
+							className="inline-flex h-7 w-7 items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+							style={{ transition: "var(--transition-fast)" }}
 							aria-label="Close tray"
 						>
 							✕
@@ -106,34 +133,37 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 									type="text"
 									value={editAvatar}
 									onChange={(e) => setEditAvatar(e.target.value)}
-									className="w-14 h-14 text-center text-2xl border border-border rounded-full bg-muted focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]"
+									className="w-14 h-14 text-center text-2xl border border-border rounded-full bg-secondary focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]"
 									maxLength={4}
 								/>
 							) : (
-								<div className="w-14 h-14 bg-muted rounded-full flex items-center justify-center text-2xl border border-border">
+								<div className="w-14 h-14 bg-secondary rounded-full flex items-center justify-center text-2xl border border-border">
 									{agent.avatar}
 								</div>
 							)}
-							<div className="flex-1">
+							<div className="flex-1 min-w-0">
 								{isEditing ? (
 									<input
 										type="text"
 										value={editName}
 										onChange={(e) => setEditName(e.target.value)}
-										className="w-full text-lg font-bold text-foreground border border-border rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]"
+										className={`${inputCls} text-base font-semibold`}
+										style={{ letterSpacing: "-0.01em" }}
 									/>
 								) : (
-									<div className="text-lg font-bold text-foreground">{agent.name}</div>
+									<div className="text-base font-semibold text-foreground" style={{ letterSpacing: "-0.01em" }}>
+										{agent.name}
+									</div>
 								)}
 								{isEditing ? (
 									<input
 										type="text"
 										value={editRole}
 										onChange={(e) => setEditRole(e.target.value)}
-										className="w-full text-xs text-muted-foreground border border-border rounded-lg px-2 py-1 mt-1 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]"
+										className={`${inputCls} text-xs mt-1`}
 									/>
 								) : (
-									<div className="text-xs text-muted-foreground">{agent.role}</div>
+									<div className="text-xs text-muted-foreground mt-0.5">{agent.role}</div>
 								)}
 							</div>
 						</div>
@@ -144,10 +174,7 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 								<select
 									value={editLevel}
 									onChange={(e) => setEditLevel(e.target.value as "LEAD" | "INT" | "SPC")}
-									className="text-[10px] font-bold px-2 py-1 rounded text-white border-none focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]"
-									style={{
-										backgroundColor: editLevel === "LEAD" ? "var(--status-lead)" : editLevel === "INT" ? "var(--status-int)" : "var(--status-spc)",
-									}}
+									className={selectCls}
 								>
 									<option value="LEAD">LEAD</option>
 									<option value="INT">INT</option>
@@ -155,13 +182,12 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 								</select>
 							) : (
 								<span
-									className={`text-[10px] font-bold px-2 py-0.5 rounded text-white ${
-										agent.level === "LEAD"
-											? "bg-[var(--status-lead)]"
-											: agent.level === "INT"
-												? "bg-[var(--status-int)]"
-												: "bg-[var(--status-spc)]"
-									}`}
+									className="text-[10px] font-bold px-2 py-0.5 rounded"
+									style={{
+										backgroundColor: levelBgColor(agent.level),
+										color: levelTextColor(agent.level),
+										letterSpacing: "0.04em",
+									}}
 								>
 									{agent.level}
 								</span>
@@ -171,7 +197,7 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 								<select
 									value={editStatus}
 									onChange={(e) => setEditStatus(e.target.value as "idle" | "active" | "blocked")}
-									className="text-[10px] font-bold px-2 py-1 rounded border border-border bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)]"
+									className={selectCls}
 								>
 									<option value="active">Active</option>
 									<option value="idle">Idle</option>
@@ -179,22 +205,21 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 								</select>
 							) : (
 								<div
-									className={`text-[10px] font-bold flex items-center gap-1 tracking-wider uppercase ${
-										agent.status === "active"
-											? "text-[var(--status-working)]"
-											: agent.status === "blocked"
-												? "text-[var(--accent-red)]"
-												: "text-muted-foreground"
-									}`}
+									className={`text-[10px] font-semibold flex items-center gap-1.5 uppercase ${agent.status === "active"
+										? "text-[var(--accent-green)]"
+										: agent.status === "blocked"
+											? "text-[var(--accent-red)]"
+											: "text-muted-foreground"
+										}`}
+									style={{ letterSpacing: "0.06em" }}
 								>
 									<span
-										className={`w-1.5 h-1.5 rounded-full ${
-											agent.status === "active"
-												? "bg-[var(--status-working)]"
-												: agent.status === "blocked"
-													? "bg-[var(--accent-red)]"
-													: "bg-muted-foreground"
-										}`}
+										className={`w-1.5 h-1.5 rounded-full ${agent.status === "active"
+											? "bg-[var(--accent-green)] status-pulse"
+											: agent.status === "blocked"
+												? "bg-[var(--accent-red)]"
+												: "bg-muted-foreground"
+											}`}
 									/>
 									{agent.status}
 								</div>
@@ -203,18 +228,21 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 
 						{/* System Prompt */}
 						<div>
-							<label className="block text-[11px] font-semibold text-muted-foreground tracking-wide mb-1.5">
-								SYSTEM PROMPT
+							<label
+								className="block text-[11px] font-semibold text-muted-foreground mb-1.5 uppercase"
+								style={{ letterSpacing: "0.06em" }}
+							>
+								System Prompt
 							</label>
 							{isEditing ? (
 								<textarea
 									value={editSystemPrompt}
 									onChange={(e) => setEditSystemPrompt(e.target.value)}
-									className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent resize-none"
+									className={textareaCls}
 									rows={4}
 								/>
 							) : (
-								<p className="text-sm text-foreground leading-relaxed bg-muted/50 rounded-lg px-3 py-2">
+								<p className="text-sm text-foreground leading-relaxed bg-secondary rounded-lg px-3 py-2">
 									{agent.systemPrompt || <span className="text-muted-foreground italic">Not set</span>}
 								</p>
 							)}
@@ -222,18 +250,21 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 
 						{/* Character */}
 						<div>
-							<label className="block text-[11px] font-semibold text-muted-foreground tracking-wide mb-1.5">
-								CHARACTER
+							<label
+								className="block text-[11px] font-semibold text-muted-foreground mb-1.5 uppercase"
+								style={{ letterSpacing: "0.06em" }}
+							>
+								Character
 							</label>
 							{isEditing ? (
 								<textarea
 									value={editCharacter}
 									onChange={(e) => setEditCharacter(e.target.value)}
-									className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent resize-none"
+									className={textareaCls}
 									rows={4}
 								/>
 							) : (
-								<p className="text-sm text-foreground leading-relaxed bg-muted/50 rounded-lg px-3 py-2">
+								<p className="text-sm text-foreground leading-relaxed bg-secondary rounded-lg px-3 py-2">
 									{agent.character || <span className="text-muted-foreground italic">Not set</span>}
 								</p>
 							)}
@@ -241,18 +272,21 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 
 						{/* Lore */}
 						<div>
-							<label className="block text-[11px] font-semibold text-muted-foreground tracking-wide mb-1.5">
-								LORE
+							<label
+								className="block text-[11px] font-semibold text-muted-foreground mb-1.5 uppercase"
+								style={{ letterSpacing: "0.06em" }}
+							>
+								Lore
 							</label>
 							{isEditing ? (
 								<textarea
 									value={editLore}
 									onChange={(e) => setEditLore(e.target.value)}
-									className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent resize-none"
+									className={textareaCls}
 									rows={4}
 								/>
 							) : (
-								<p className="text-sm text-foreground leading-relaxed bg-muted/50 rounded-lg px-3 py-2">
+								<p className="text-sm text-foreground leading-relaxed bg-secondary rounded-lg px-3 py-2">
 									{agent.lore || <span className="text-muted-foreground italic">Not set</span>}
 								</p>
 							)}
@@ -266,7 +300,8 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 								<button
 									type="button"
 									onClick={handleCancel}
-									className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
+									className="flex-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary"
+									style={{ transition: "var(--transition-fast)" }}
 								>
 									Cancel
 								</button>
@@ -274,7 +309,8 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 									type="button"
 									onClick={handleSave}
 									disabled={saving || !editName.trim()}
-									className="flex-1 px-4 py-2 text-sm font-semibold text-white bg-[var(--accent-blue)] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+									className="flex-1 px-4 py-2 text-sm font-semibold text-primary-foreground bg-[var(--accent-blue)] rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+									style={{ transition: "var(--transition-fast)" }}
 								>
 									{saving ? "Saving..." : "Save"}
 								</button>
@@ -283,7 +319,8 @@ const AgentDetailTray: React.FC<AgentDetailTrayProps> = ({ agentId, onClose }) =
 							<button
 								type="button"
 								onClick={() => setIsEditing(true)}
-								className="w-full px-4 py-2 text-sm font-semibold text-white bg-[var(--accent-blue)] rounded-lg hover:opacity-90 transition-opacity"
+								className="w-full px-4 py-2 text-sm font-semibold text-foreground bg-secondary border border-border rounded-lg hover:bg-accent"
+								style={{ transition: "var(--transition-fast)" }}
 							>
 								Edit Agent
 							</button>

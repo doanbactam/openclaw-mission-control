@@ -27,12 +27,16 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
       aria-label="Right sidebar"
     >
       <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">
-        <span className="text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase">
+        <span
+          className="text-[10px] font-semibold text-muted-foreground uppercase"
+          style={{ letterSpacing: "0.1em" }}
+        >
           {activeTab === "live-feed" ? "Live Feed" : "Documents"}
         </span>
         <button
           type="button"
-          className="md:hidden inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+          className="md:hidden inline-flex h-6 w-6 items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary"
+          style={{ transition: "var(--transition-fast)" }}
           onClick={onClose}
           aria-label="Close sidebar"
         >

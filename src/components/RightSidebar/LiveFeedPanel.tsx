@@ -28,12 +28,18 @@ const LiveFeedPanel: React.FC = () => {
       <div className="flex-1 flex flex-col overflow-hidden animate-pulse">
         <div className="flex-1 p-3 space-y-2">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-12 bg-muted rounded" />
+            <div key={i} className="h-12 bg-secondary rounded-lg" />
           ))}
         </div>
       </div>
     );
   }
+
+  const chipCls = (active: boolean) =>
+    `text-[9px] font-medium px-2 py-1 rounded-md ${active
+      ? "bg-foreground text-primary-foreground"
+      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+    }`;
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto p-3 gap-3">
@@ -45,10 +51,8 @@ const LiveFeedPanel: React.FC = () => {
               key={f.id}
               type="button"
               onClick={() => setSelectedType(f.id)}
-              className={`text-[9px] font-medium px-2 py-1 rounded transition-colors ${selectedType === f.id
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+              className={chipCls(selectedType === f.id)}
+              style={{ transition: "var(--transition-fast)" }}
             >
               {f.label}
             </button>
@@ -59,10 +63,8 @@ const LiveFeedPanel: React.FC = () => {
           <button
             type="button"
             onClick={() => setSelectedAgentId(undefined)}
-            className={`text-[9px] font-medium px-2 py-1 rounded transition-colors ${selectedAgentId === undefined
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
+            className={chipCls(selectedAgentId === undefined)}
+            style={{ transition: "var(--transition-fast)" }}
           >
             All
           </button>
@@ -71,10 +73,8 @@ const LiveFeedPanel: React.FC = () => {
               key={a._id}
               type="button"
               onClick={() => setSelectedAgentId(a._id)}
-              className={`text-[9px] font-medium px-2 py-1 rounded transition-colors ${selectedAgentId === a._id
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+              className={chipCls(selectedAgentId === a._id)}
+              style={{ transition: "var(--transition-fast)" }}
             >
               {a.name}
             </button>
@@ -83,13 +83,14 @@ const LiveFeedPanel: React.FC = () => {
       </div>
 
       {/* Feed items */}
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1">
         {activities.map((item) => (
           <div
             key={item._id}
-            className="flex gap-2 px-2 py-2 rounded hover:bg-muted/50 transition-colors"
+            className="flex gap-2 px-2 py-2 rounded-md hover:bg-secondary/70"
+            style={{ transition: "var(--transition-fast)" }}
           >
-            <div className="w-1 h-1 bg-[var(--accent-orange)] rounded-full mt-1.5 shrink-0" />
+            <div className="w-1 h-1 bg-[var(--accent-blue)] rounded-full mt-1.5 shrink-0" />
             <div className="text-[11px] leading-snug text-foreground/80 min-w-0">
               <span className="font-medium text-foreground">
                 {item.agentName}

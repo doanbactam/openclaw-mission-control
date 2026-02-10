@@ -23,8 +23,8 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
     return (
       <div className="tray tray-preview is-open">
         <div className="p-4 animate-pulse">
-          <div className="h-8 bg-muted rounded mb-4" />
-          <div className="h-64 bg-muted rounded" />
+          <div className="h-8 bg-secondary rounded-lg mb-4" />
+          <div className="h-64 bg-secondary rounded-lg" />
         </div>
       </div>
     );
@@ -33,7 +33,7 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
   const renderContent = () => {
     const { type, content } = documentContext;
 
-    // Image - render from URL, data URI, or local file path
+    // Image
     if (type === "image") {
       let imgSrc: string | null = null;
 
@@ -44,7 +44,6 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
       ) {
         imgSrc = content;
       } else if (content.startsWith("/")) {
-        // Local file path — serve via Vite dev server
         imgSrc = `/api/local-file?path=${encodeURIComponent(content)}`;
       }
 
@@ -54,14 +53,15 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
             <img
               src={imgSrc}
               alt={documentContext.title}
-              className="max-w-full max-h-[60vh] object-contain rounded-lg shadow-md"
+              className="max-w-full max-h-[60vh] object-contain rounded-lg"
+              style={{ boxShadow: "var(--shadow-md)" }}
             />
           </div>
         );
       }
       return (
         <div className="p-4 text-center text-muted-foreground">
-          <div className="text-4xl mb-2">IMG</div>
+          <div className="text-4xl mb-2 opacity-40">IMG</div>
           <div className="text-sm">Image content preview not available</div>
         </div>
       );
@@ -71,7 +71,7 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
     if (type === "code") {
       return (
         <div className="p-4">
-          <pre className="bg-[#1e1e1e] text-[#d4d4d4] p-4 rounded-lg overflow-x-auto text-xs leading-relaxed">
+          <pre className="bg-secondary text-foreground p-4 rounded-lg overflow-x-auto text-xs leading-relaxed font-mono border border-border">
             <code>{content}</code>
           </pre>
         </div>
@@ -81,7 +81,7 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
     // Markdown or Notes
     if (type === "markdown" || type === "note") {
       return (
-        <div className="p-4 prose prose-sm max-w-none markdown-content">
+        <div className="p-4 markdown-content text-foreground">
           <Markdown>{content}</Markdown>
         </div>
       );
@@ -97,20 +97,17 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
     );
   };
 
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "markdown":
-        return "bg-blue-100 text-blue-700";
-      case "code":
-        return "bg-green-100 text-green-700";
-      case "image":
-        return "bg-purple-100 text-purple-700";
-      case "note":
-        return "bg-yellow-100 text-yellow-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
+  const getTypeBadge = (type: string) => {
+    const styles: Record<string, { bg: string; text: string }> = {
+      markdown: { bg: "oklch(0.92 0.04 250)", text: "oklch(0.45 0.15 250)" },
+      code: { bg: "oklch(0.92 0.04 155)", text: "oklch(0.45 0.15 155)" },
+      image: { bg: "oklch(0.92 0.04 300)", text: "oklch(0.45 0.12 300)" },
+      note: { bg: "oklch(0.92 0.03 65)", text: "oklch(0.5 0.12 65)" },
+    };
+    return styles[type] || { bg: "oklch(0.93 0 0)", text: "oklch(0.5 0 0)" };
   };
+
+  const typeBadge = getTypeBadge(documentContext.type);
 
   return (
     <div className="tray tray-preview is-open">
@@ -121,24 +118,29 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="h-7 w-7 flex items-center justify-center rounded hover:bg-muted transition-colors text-muted-foreground"
+              className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground"
+              style={{ transition: "var(--transition-fast)" }}
               aria-label="Close preview tray"
             >
               ✕
             </button>
-            <span className="text-[11px] font-bold tracking-widest text-muted-foreground">
-              PREVIEW
+            <span
+              className="text-[11px] font-semibold text-muted-foreground uppercase"
+              style={{ letterSpacing: "0.08em" }}
+            >
+              Preview
             </span>
           </div>
           <span
-            className={`text-[10px] font-semibold px-2 py-1 rounded ${getTypeColor(documentContext.type)}`}
+            className="text-[10px] font-semibold px-2 py-1 rounded"
+            style={{ backgroundColor: typeBadge.bg, color: typeBadge.text }}
           >
             {documentContext.type.toUpperCase()}
           </span>
         </div>
 
         {/* Document title */}
-        <div className="px-4 py-3 border-b border-border bg-muted/30">
+        <div className="px-4 py-3 border-b border-border bg-secondary/40">
           <h3 className="text-sm font-semibold text-foreground">
             {documentContext.title}
           </h3>
@@ -150,14 +152,14 @@ const DocumentPreviewTray: React.FC<DocumentPreviewTrayProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto bg-white">{renderContent()}</div>
+        <div className="flex-1 overflow-y-auto bg-background">{renderContent()}</div>
 
         {/* Footer with metadata */}
-        <div className="px-4 py-2 border-t border-border bg-muted/30 text-[10px] text-muted-foreground flex items-center gap-4">
+        <div className="px-4 py-2 border-t border-border bg-secondary/40 text-[10px] text-muted-foreground flex items-center gap-4">
           {documentContext.agentName && (
             <div className="flex items-center gap-1">
               <span>Created by</span>
-              <span className="text-[var(--accent-orange)] font-medium">
+              <span className="text-[var(--accent-blue)] font-medium">
                 {documentContext.agentName}
               </span>
             </div>

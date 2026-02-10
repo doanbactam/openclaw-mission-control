@@ -26,18 +26,21 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({
 	return (
 		<div
 			ref={setNodeRef}
-			className={`bg-background flex flex-col min-w-[220px] min-h-0 transition-colors duration-150 ${isOver ? "drop-zone-active" : ""
-				}`}
+			className={`bg-background flex flex-col min-w-[220px] min-h-0 ${isOver ? "drop-zone-active" : ""}`}
+			style={{ transition: "background-color var(--transition-fast)" }}
 		>
 			<div className="flex shrink-0 items-center gap-2 px-3 py-2.5 border-b border-border">
 				<span
 					className="w-1.5 h-1.5 rounded-full shrink-0"
 					style={{ backgroundColor: column.color }}
 				/>
-				<span className="text-[10px] font-semibold text-muted-foreground flex-1 uppercase tracking-[0.1em]">
+				<span
+					className="text-[10px] font-semibold text-muted-foreground flex-1 uppercase"
+					style={{ letterSpacing: "0.08em" }}
+				>
 					{column.label}
 				</span>
-				<span className="text-[10px] text-muted-foreground/60 tabular-nums">
+				<span className="text-[10px] text-muted-foreground/60 tabular-nums font-mono">
 					{taskCount}
 				</span>
 			</div>

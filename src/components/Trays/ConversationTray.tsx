@@ -25,10 +25,10 @@ const ConversationTray: React.FC<ConversationTrayProps> = ({
     return (
       <div className="tray is-open">
         <div className="p-4 animate-pulse">
-          <div className="h-8 bg-muted rounded mb-4" />
+          <div className="h-8 bg-secondary rounded-lg mb-4" />
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-16 bg-muted rounded" />
+              <div key={i} className="h-16 bg-secondary rounded-lg" />
             ))}
           </div>
         </div>
@@ -45,33 +45,38 @@ const ConversationTray: React.FC<ConversationTrayProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="h-7 w-7 flex items-center justify-center rounded hover:bg-muted transition-colors text-muted-foreground"
+              className="h-7 w-7 flex items-center justify-center rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground"
+              style={{ transition: "var(--transition-fast)" }}
               aria-label="Close conversation tray"
             >
               ✕
             </button>
-            <span className="text-[11px] font-bold tracking-widest text-muted-foreground">
-              CONTEXT
+            <span
+              className="text-[11px] font-semibold text-muted-foreground uppercase"
+              style={{ letterSpacing: "0.08em" }}
+            >
+              Context
             </span>
           </div>
           <button
             type="button"
             onClick={onOpenPreview}
-            className="text-[10px] font-semibold px-3 py-1.5 rounded bg-[var(--accent-orange)] text-white hover:bg-[var(--accent-orange)]/90 transition-colors"
+            className="text-[10px] font-semibold px-3 py-1.5 rounded-md bg-[var(--accent-blue)] text-foreground hover:opacity-90"
+            style={{ transition: "var(--transition-fast)" }}
           >
             Open Preview
           </button>
         </div>
 
         {/* Document info */}
-        <div className="px-4 py-3 border-b border-border bg-muted/30">
+        <div className="px-4 py-3 border-b border-border bg-secondary/40">
           <h3 className="text-sm font-semibold text-foreground truncate">
             {documentContext.title}
           </h3>
           <div className="flex items-center gap-2 mt-1.5 text-[10px] text-muted-foreground">
             {documentContext.agentName && (
               <>
-                <span className="text-[var(--accent-orange)] font-medium">
+                <span className="text-[var(--accent-blue)] font-medium">
                   {documentContext.agentName}
                 </span>
                 <span>·</span>
@@ -93,13 +98,16 @@ const ConversationTray: React.FC<ConversationTrayProps> = ({
             {/* Original prompt */}
             {documentContext.taskDescription && (
               <>
-                <div className="text-[10px] font-bold tracking-widest text-muted-foreground mb-1">
-                  PROMPT
+                <div
+                  className="text-[10px] font-semibold text-muted-foreground mb-1 uppercase"
+                  style={{ letterSpacing: "0.08em" }}
+                >
+                  Prompt
                 </div>
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg mb-2">
+                <div className="p-3 bg-secondary border border-border rounded-lg mb-2">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="text-lg">👤</span>
-                    <span className="text-xs font-semibold text-blue-700">
+                    <span className="text-base">👤</span>
+                    <span className="text-xs font-semibold text-foreground">
                       User
                     </span>
                   </div>
@@ -113,8 +121,11 @@ const ConversationTray: React.FC<ConversationTrayProps> = ({
             {/* Message thread */}
             {documentContext.conversationMessages.length > 0 && (
               <>
-                <div className="text-[10px] font-bold tracking-widest text-muted-foreground mb-1">
-                  AGENT THREAD
+                <div
+                  className="text-[10px] font-semibold text-muted-foreground mb-1 uppercase"
+                  style={{ letterSpacing: "0.08em" }}
+                >
+                  Agent Thread
                 </div>
                 {documentContext.conversationMessages.map((msg) => (
                   <div
@@ -123,9 +134,9 @@ const ConversationTray: React.FC<ConversationTrayProps> = ({
                   >
                     <div className="flex items-center gap-2 mb-1.5">
                       {msg.agentAvatar && (
-                        <span className="text-lg">{msg.agentAvatar}</span>
+                        <span className="text-base">{msg.agentAvatar}</span>
                       )}
-                      <span className="text-xs font-semibold text-[var(--accent-orange)]">
+                      <span className="text-xs font-semibold text-[var(--accent-blue)]">
                         {msg.agentName}
                       </span>
                     </div>

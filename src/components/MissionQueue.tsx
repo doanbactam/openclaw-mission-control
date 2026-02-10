@@ -224,7 +224,10 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 			{/* Toolbar */}
 			<div className="shrink-0 flex items-center justify-between px-4 py-2.5 bg-card border-b border-border">
 				<div className="flex items-center gap-3">
-					<span className="text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase">
+					<span
+						className="text-[10px] font-semibold text-muted-foreground uppercase"
+						style={{ letterSpacing: "0.1em" }}
+					>
 						Queue
 					</span>
 					<span className="text-[10px] text-muted-foreground/50 tabular-nums">
@@ -233,10 +236,11 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 				</div>
 				<button
 					onClick={() => setShowArchived(!showArchived)}
-					className={`flex items-center gap-1.5 text-[10px] font-medium px-2 py-1 rounded transition-colors ${showArchived
-							? "bg-accent text-foreground"
-							: "text-muted-foreground hover:text-foreground hover:bg-muted"
+					className={`flex items-center gap-1.5 text-[10px] font-medium px-2 py-1 rounded-md ${showArchived
+						? "bg-accent text-foreground"
+						: "text-muted-foreground hover:text-foreground hover:bg-secondary"
 						}`}
+					style={{ transition: "var(--transition-fast)" }}
 				>
 					<IconArchive size={12} />
 					{archivedCount > 0 && (

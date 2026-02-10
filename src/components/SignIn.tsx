@@ -9,13 +9,18 @@ function SignInForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
+	const inputCls = "w-full bg-secondary text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-[var(--accent-blue)] focus:ring-1 focus:ring-[var(--accent-blue)]/30 outline-none placeholder:text-muted-foreground/40";
+
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background p-4 font-sans">
 			<div className="w-full max-w-sm">
 				{/* Brand */}
 				<div className="text-center mb-8">
-					<span className="text-2xl text-[var(--accent-orange)] block mb-3">◇</span>
-					<h1 className="text-lg font-semibold tracking-[0.2em] text-foreground uppercase">
+					<span className="text-2xl text-[var(--accent-blue)] block mb-3">◇</span>
+					<h1
+						className="text-base font-semibold text-foreground uppercase"
+						style={{ letterSpacing: "0.15em" }}
+					>
 						Mission Control
 					</h1>
 					<p className="mt-1.5 text-xs text-muted-foreground">
@@ -50,23 +55,26 @@ function SignInForm() {
 					<div className="space-y-3">
 						<div>
 							<label
-								className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1.5 block"
+								className="text-[10px] font-medium uppercase text-muted-foreground mb-1.5 block"
+								style={{ letterSpacing: "0.08em" }}
 								htmlFor="email"
 							>
 								Email
 							</label>
 							<input
 								id="email"
-								className="w-full bg-card text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-[var(--accent-orange)] focus:ring-1 focus:ring-[var(--accent-orange)]/30 outline-none transition-all placeholder:text-muted-foreground/40"
+								className={inputCls}
 								type="email"
 								name="email"
 								placeholder="you@example.com"
 								required
+								style={{ transition: "var(--transition-fast)" }}
 							/>
 						</div>
 						<div>
 							<label
-								className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground mb-1.5 block"
+								className="text-[10px] font-medium uppercase text-muted-foreground mb-1.5 block"
+								style={{ letterSpacing: "0.08em" }}
 								htmlFor="password"
 							>
 								Password
@@ -74,16 +82,18 @@ function SignInForm() {
 							<div className="relative">
 								<input
 									id="password"
-									className="w-full bg-card text-foreground rounded-lg px-3 py-2.5 text-sm border border-border focus:border-[var(--accent-orange)] focus:ring-1 focus:ring-[var(--accent-orange)]/30 outline-none transition-all placeholder:text-muted-foreground/40"
+									className={inputCls}
 									type={showPassword ? "text" : "password"}
 									name="password"
 									placeholder="••••••••"
 									required
+									style={{ transition: "var(--transition-fast)" }}
 								/>
 								<button
 									type="button"
 									onClick={() => setShowPassword(!showPassword)}
-									className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+									className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+									style={{ transition: "var(--transition-fast)" }}
 								>
 									{showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
 								</button>
@@ -92,7 +102,8 @@ function SignInForm() {
 					</div>
 
 					<button
-						className="w-full bg-foreground text-background font-semibold py-2.5 px-4 rounded-lg hover:bg-foreground/90 active:scale-[0.99] transition-all uppercase tracking-[0.15em] text-xs cursor-pointer disabled:opacity-50"
+						className="w-full bg-foreground text-primary-foreground font-semibold py-2.5 px-4 rounded-lg hover:opacity-90 active:scale-[0.99] uppercase text-xs cursor-pointer disabled:opacity-50"
+						style={{ letterSpacing: "0.12em", transition: "var(--transition-fast)" }}
 						type="submit"
 						disabled={isLoading}
 					>
@@ -106,7 +117,8 @@ function SignInForm() {
 					<div className="text-center">
 						<button
 							type="button"
-							className="text-[11px] text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+							className="text-[11px] text-muted-foreground hover:text-foreground cursor-pointer"
+							style={{ transition: "var(--transition-fast)" }}
 							onClick={() => {
 								setFlow(flow === "signIn" ? "signUp" : "signIn");
 								setError(null);

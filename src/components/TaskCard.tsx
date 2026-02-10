@@ -65,8 +65,9 @@ const TaskCard: React.FC<TaskCardProps> = ({
 						? undefined
 						: task.borderColor || "transparent",
 				borderLeftWidth: isSelected || isOverlay ? undefined : "3px",
+				transition: "var(--transition-fast)",
 			}}
-			className={`min-w-0 bg-card rounded-lg p-3 flex flex-col gap-2 border border-border transition-all duration-150 cursor-pointer select-none ${isDragging ? "dragging-card" : "hover:bg-accent/50"
+			className={`min-w-0 bg-card rounded-lg p-3 flex flex-col gap-2 border border-border cursor-pointer select-none ${isDragging ? "dragging-card" : "hover:bg-accent/40"
 				} ${isSelected
 					? "ring-1 ring-[var(--accent-blue)] border-[var(--accent-blue)]/30"
 					: ""
@@ -81,14 +82,15 @@ const TaskCard: React.FC<TaskCardProps> = ({
 				<h3 className="text-[13px] font-medium text-foreground leading-snug break-words flex-1">
 					{task.title}
 				</h3>
-				<div className="flex items-center gap-1 shrink-0">
+				<div className="flex items-center gap-0.5 shrink-0">
 					{(columnId === "inbox" || columnId === "assigned") && currentUserAgentId && onPlay && (
 						<button
 							onClick={(e) => {
 								e.stopPropagation();
 								onPlay(task._id);
 							}}
-							className="p-1 hover:bg-muted rounded transition-colors text-muted-foreground hover:text-[var(--accent-blue)]"
+							className="p-1 hover:bg-secondary rounded-md text-muted-foreground hover:text-[var(--accent-blue)]"
+							style={{ transition: "var(--transition-fast)" }}
 							title="Start task"
 						>
 							<IconPlayerPlay size={12} />
@@ -105,7 +107,8 @@ const TaskCard: React.FC<TaskCardProps> = ({
 								e.stopPropagation();
 								onArchive(task._id);
 							}}
-							className="p-1 hover:bg-muted rounded transition-colors text-muted-foreground hover:text-foreground"
+							className="p-1 hover:bg-secondary rounded-md text-muted-foreground hover:text-foreground"
+							style={{ transition: "var(--transition-fast)" }}
 							title="Archive"
 						>
 							<IconArchive size={12} />
@@ -131,7 +134,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 					)}
 				</div>
 				{task.lastMessageTime && (
-					<span className="text-[10px] text-muted-foreground/60 tabular-nums">
+					<span className="text-[10px] text-muted-foreground/60 tabular-nums font-mono">
 						{formatRelativeTime(task.lastMessageTime)}
 					</span>
 				)}
@@ -143,7 +146,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 					{task.tags.map((tag) => (
 						<span
 							key={tag}
-							className="text-[9px] px-1.5 py-0.5 bg-muted rounded font-medium text-muted-foreground"
+							className="text-[9px] px-1.5 py-0.5 bg-secondary rounded font-medium text-muted-foreground"
 						>
 							{tag}
 						</span>

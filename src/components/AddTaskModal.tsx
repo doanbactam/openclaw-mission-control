@@ -120,13 +120,17 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onCreated, initial
 				onClick={(e) => e.stopPropagation()}
 			>
 				<div className="flex items-center justify-between px-6 py-4 border-b border-border">
-					<h2 className="text-sm font-bold tracking-wide text-foreground">
+					<h2
+						className="text-xs font-semibold text-muted-foreground uppercase"
+						style={{ letterSpacing: "0.08em" }}
+					>
 						New Task
 					</h2>
 					<button
 						type="button"
 						onClick={onClose}
-						className="inline-flex h-7 w-7 items-center justify-center rounded-lg hover:bg-muted transition-colors text-muted-foreground"
+						className="inline-flex h-7 w-7 items-center justify-center rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground"
+						style={{ transition: "var(--transition-fast)" }}
 						aria-label="Close modal"
 					>
 						✕
@@ -256,8 +260,8 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onCreated, initial
 										setBorderColor(borderColor === color ? "" : color)
 									}
 									className={`w-7 h-7 rounded-full border-2 transition-all ${borderColor === color
-											? "border-foreground scale-110"
-											: "border-transparent hover:scale-105"
+										? "border-foreground scale-110"
+										: "border-transparent hover:scale-105"
 										}`}
 									style={{ backgroundColor: color }}
 									aria-label={`Select color ${color}`}
@@ -280,14 +284,16 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onCreated, initial
 						<button
 							type="button"
 							onClick={onClose}
-							className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"
+							className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground rounded-lg hover:bg-secondary"
+							style={{ transition: "var(--transition-fast)" }}
 						>
 							Cancel
 						</button>
 						<button
 							type="submit"
 							disabled={submitting || !title.trim()}
-							className="px-4 py-2 text-sm font-semibold text-white bg-[var(--accent-blue)] rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+							className="px-4 py-2 text-sm font-semibold text-foreground bg-[var(--accent-blue)] rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+							style={{ transition: "var(--transition-fast)" }}
 						>
 							{submitting ? "Creating..." : "Create Task"}
 						</button>

@@ -46,7 +46,7 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
       <div className="flex-1 flex flex-col overflow-hidden animate-pulse">
         <div className="flex-1 p-3 space-y-2">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-12 bg-muted rounded" />
+            <div key={i} className="h-12 bg-secondary rounded-lg" />
           ))}
         </div>
       </div>
@@ -63,6 +63,12 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
     }
   };
 
+  const chipCls = (active: boolean) =>
+    `text-[9px] font-medium px-2 py-1 rounded-md ${active
+      ? "bg-foreground text-primary-foreground"
+      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+    }`;
+
   return (
     <div className="flex-1 flex flex-col overflow-y-auto p-3 gap-3">
       {/* Filters */}
@@ -73,10 +79,8 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
               key={f.id}
               type="button"
               onClick={() => setSelectedType(f.id)}
-              className={`text-[9px] font-medium px-2 py-1 rounded transition-colors ${selectedType === f.id
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+              className={chipCls(selectedType === f.id)}
+              style={{ transition: "var(--transition-fast)" }}
             >
               {f.label}
             </button>
@@ -87,10 +91,8 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
           <button
             type="button"
             onClick={() => setSelectedAgentId(undefined)}
-            className={`text-[9px] font-medium px-2 py-1 rounded transition-colors ${selectedAgentId === undefined
-                ? "bg-foreground text-background"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
+            className={chipCls(selectedAgentId === undefined)}
+            style={{ transition: "var(--transition-fast)" }}
           >
             All
           </button>
@@ -99,10 +101,8 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
               key={a._id}
               type="button"
               onClick={() => setSelectedAgentId(a._id)}
-              className={`text-[9px] font-medium px-2 py-1 rounded transition-colors ${selectedAgentId === a._id
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+              className={chipCls(selectedAgentId === a._id)}
+              style={{ transition: "var(--transition-fast)" }}
             >
               {a.name}
             </button>
@@ -121,10 +121,11 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
             <div
               key={doc._id}
               onClick={() => handleDocumentClick(doc._id)}
-              className={`flex items-center gap-2.5 px-2.5 py-2 rounded cursor-pointer transition-colors ${selectedDocumentId === doc._id
-                  ? "bg-accent"
-                  : "hover:bg-muted/50"
+              className={`flex items-center gap-2.5 px-2.5 py-2 rounded-md cursor-pointer ${selectedDocumentId === doc._id
+                ? "bg-accent"
+                : "hover:bg-secondary/70"
                 }`}
+              style={{ transition: "var(--transition-fast)" }}
             >
               <span className="text-[9px] font-bold text-muted-foreground w-6 text-center shrink-0 font-mono">
                 {getTypeLabel(doc.type)}
@@ -145,7 +146,8 @@ const DocumentsPanel: React.FC<DocumentsPanelProps> = ({
                   e.stopPropagation();
                   onPreviewDocument(doc._id);
                 }}
-                className="shrink-0 text-[9px] font-medium px-1.5 py-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                className="shrink-0 text-[9px] font-medium px-1.5 py-0.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary"
+                style={{ transition: "var(--transition-fast)" }}
               >
                 View
               </button>

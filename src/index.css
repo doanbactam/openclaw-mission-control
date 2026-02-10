@@ -1,59 +1,75 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
-/* ─── Aesthetic-Usability Design System ─── */
-/* Dark mode first. Zero noise. Every pixel has purpose. */
+/* ─── Design System: HIG × Codex × Conductor ─── */
+/* Dark-first. Zero noise. Every pixel has purpose. */
 
 :root {
-	--background: oklch(0.08 0 0);
-	--foreground: oklch(0.95 0 0);
-	--card: oklch(0.12 0 0);
-	--card-foreground: oklch(0.95 0 0);
-	--popover: oklch(0.14 0 0);
-	--popover-foreground: oklch(0.95 0 0);
-	--primary: oklch(0.95 0 0);
-	--primary-foreground: oklch(0.08 0 0);
-	--secondary: oklch(0.16 0 0);
-	--secondary-foreground: oklch(0.85 0 0);
-	--muted: oklch(0.18 0 0);
-	--muted-foreground: oklch(0.55 0 0);
-	--accent: oklch(0.22 0 0);
-	--accent-foreground: oklch(0.9 0 0);
-	--destructive: oklch(0.65 0.2 25);
-	--destructive-foreground: oklch(0.95 0 0);
-	--border: oklch(0.2 0 0);
-	--input: oklch(0.16 0 0);
-	--ring: oklch(0.5 0 0);
-	--chart-1: oklch(0.75 0.12 75);
-	--chart-2: oklch(0.6 0.18 260);
+	/* Background tiers — Light mode (Conductor-inspired) */
+	--background: oklch(0.97 0.005 230);
+	--foreground: oklch(0.15 0.01 250);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.15 0.01 250);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.15 0.01 250);
+	--primary: oklch(0.2 0.01 250);
+	--primary-foreground: oklch(0.98 0 0);
+	--secondary: oklch(0.95 0.005 230);
+	--secondary-foreground: oklch(0.25 0.01 250);
+	--muted: oklch(0.93 0.005 230);
+	--muted-foreground: oklch(0.5 0.01 250);
+	--accent: oklch(0.92 0.008 230);
+	--accent-foreground: oklch(0.2 0.01 250);
+	--destructive: oklch(0.55 0.22 25);
+	--destructive-foreground: oklch(0.98 0 0);
+	--border: oklch(0.88 0.008 230);
+	--input: oklch(0.95 0.005 230);
+	--ring: oklch(0.6 0.15 250);
+	--chart-1: oklch(0.65 0.15 75);
+	--chart-2: oklch(0.55 0.18 260);
 	--chart-3: oklch(0.5 0 0);
-	--chart-4: oklch(0.35 0 0);
-	--chart-5: oklch(0.85 0 0);
-	--sidebar: oklch(0.10 0 0);
-	--sidebar-foreground: oklch(0.85 0 0);
-	--sidebar-primary: oklch(0.95 0 0);
-	--sidebar-primary-foreground: oklch(0.08 0 0);
-	--sidebar-accent: oklch(0.18 0 0);
-	--sidebar-accent-foreground: oklch(0.85 0 0);
-	--sidebar-border: oklch(0.18 0 0);
-	--sidebar-ring: oklch(0.5 0 0);
+	--chart-4: oklch(0.7 0 0);
+	--chart-5: oklch(0.35 0 0);
+	--sidebar: oklch(0.98 0.003 230);
+	--sidebar-foreground: oklch(0.25 0.01 250);
+	--sidebar-primary: oklch(0.2 0.01 250);
+	--sidebar-primary-foreground: oklch(0.98 0 0);
+	--sidebar-accent: oklch(0.93 0.008 230);
+	--sidebar-accent-foreground: oklch(0.25 0.01 250);
+	--sidebar-border: oklch(0.90 0.005 230);
+	--sidebar-ring: oklch(0.6 0.15 250);
+
+	/* Typography */
 	--font-sans: "Outfit", system-ui, -apple-system, sans-serif;
 	--font-serif: Georgia, serif;
 	--font-mono: "SF Mono", "Fira Code", monospace;
+
+	/* Border radius */
 	--radius: 0.5rem;
 
-	/* Semantic accent tokens — only 4 colors */
-	--accent-green: oklch(0.72 0.18 155);
-	--accent-blue: oklch(0.65 0.18 250);
-	--accent-orange: oklch(0.75 0.16 65);
-	--accent-red: oklch(0.65 0.2 25);
+	/* Semantic accents — ONLY 4 (vivid for light bg) */
+	--accent-green: oklch(0.6 0.2 155);
+	--accent-blue: oklch(0.55 0.2 250);
+	--accent-orange: oklch(0.7 0.18 65);
+	--accent-red: oklch(0.55 0.22 25);
 
 	/* Layout tokens */
-	--header-height: 56px;
-	--sidebar-left-width: 240px;
-	--sidebar-right-width: 280px;
+	--header-height: 52px;
+	--sidebar-left-width: 232px;
+	--sidebar-right-width: 272px;
 
-	/* Shadows — minimal */
+	/* Spacing scale (4pt base) */
+	--space-1: 4px;
+	--space-2: 8px;
+	--space-3: 12px;
+	--space-4: 16px;
+	--space-5: 20px;
+	--space-6: 24px;
+	--space-8: 32px;
+	--space-10: 40px;
+	--space-12: 48px;
+
+	/* Shadows — minimal for dark mode */
 	--shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.2);
 	--shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.25);
 	--shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.3);
@@ -68,6 +84,13 @@
 	--shadow-spread: 0px;
 	--shadow-opacity: 0.18;
 	--shadow-color: hsl(0 0% 0%);
+
+	/* Transition tokens */
+	--transition-fast: 100ms ease-out;
+	--transition-normal: 200ms ease-out;
+	--transition-smooth: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
 	--tracking-normal: 0em;
 	--spacing: 0.25rem;
 }
@@ -132,10 +155,11 @@
 
 	body {
 		@apply bg-background text-foreground font-sans antialiased h-screen overflow-hidden;
+		font-feature-settings: "ss01", "ss02";
 	}
 }
 
-/* ─── App Layout ─── */
+/* ─── App Layout (HIG 3-column) ─── */
 .app-container {
 	display: grid;
 	grid-template-areas:
@@ -157,15 +181,16 @@
 		height: 100dvh;
 		overflow: hidden;
 	}
-	.app-container > * {
+
+	.app-container>* {
 		min-width: 0;
 	}
 
 	.drawer-backdrop {
 		position: fixed;
 		inset: 0;
-		background: rgba(0, 0, 0, 0.6);
-		backdrop-filter: blur(4px);
+		background: rgba(0, 0, 0, 0.65);
+		backdrop-filter: blur(8px);
 		z-index: 40;
 	}
 
@@ -177,7 +202,7 @@
 		z-index: 50;
 		max-width: 92vw;
 		box-shadow: var(--shadow-xl);
-		transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+		transition: transform var(--transition-smooth);
 		will-change: transform;
 	}
 
@@ -198,10 +223,17 @@
 	}
 }
 
-/* ─── Card Running State ─── */
+/* ─── Card Running State (Codex-inspired agent pulse) ─── */
 @keyframes card-pulse {
-	0%, 100% { box-shadow: 0 0 0 0 oklch(0.65 0.18 250 / 0.25); }
-	50% { box-shadow: 0 0 0 3px oklch(0.65 0.18 250 / 0.08); }
+
+	0%,
+	100% {
+		box-shadow: 0 0 0 0 oklch(0.65 0.18 250 / 0.2);
+	}
+
+	50% {
+		box-shadow: 0 0 0 3px oklch(0.65 0.18 250 / 0.06);
+	}
 }
 
 .card-running {
@@ -209,7 +241,24 @@
 	border-color: var(--accent-blue) !important;
 }
 
-/* ─── Scrollbar ─── */
+/* ─── Status dot pulse ─── */
+@keyframes status-pulse {
+
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+}
+
+.status-pulse {
+	animation: status-pulse 2s ease-in-out infinite;
+}
+
+/* ─── Scrollbar (minimal, deferred) ─── */
 ::-webkit-scrollbar {
 	width: 4px;
 }
@@ -219,15 +268,15 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	background: oklch(0.25 0 0);
+	background: oklch(0.8 0.005 230);
 	border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: oklch(0.35 0 0);
+	background: oklch(0.7 0.01 230);
 }
 
-/* ─── Agent Detail Tray ─── */
+/* ─── Agent Detail Tray (Conductor-style slide) ─── */
 .agent-tray {
 	position: fixed;
 	top: var(--header-height);
@@ -238,7 +287,7 @@
 	border-right: 1px solid var(--border);
 	box-shadow: var(--shadow-xl);
 	transform: translateX(-100%);
-	transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 250ms;
+	transition: transform var(--transition-smooth), visibility 0s 250ms;
 	z-index: 100;
 	pointer-events: none;
 	visibility: hidden;
@@ -248,7 +297,7 @@
 	transform: translateX(0);
 	visibility: visible;
 	pointer-events: auto;
-	transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0s;
+	transition: transform var(--transition-smooth), visibility 0s 0s;
 }
 
 @media (max-width: 768px) {
@@ -261,7 +310,7 @@
 	}
 }
 
-/* ─── Tray System ─── */
+/* ─── Tray System (Codex IDE split-pane pattern) ─── */
 .tray-container {
 	position: fixed;
 	top: var(--header-height);
@@ -285,7 +334,7 @@
 	border-left: 1px solid var(--border);
 	box-shadow: var(--shadow-lg);
 	transform: translateX(100%);
-	transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+	transition: transform var(--transition-smooth);
 	pointer-events: auto;
 }
 
@@ -321,7 +370,7 @@
 		position: fixed;
 		inset: 0;
 		background: rgba(0, 0, 0, 0.7);
-		backdrop-filter: blur(4px);
+		backdrop-filter: blur(8px);
 		pointer-events: auto;
 	}
 
@@ -363,11 +412,56 @@
 }
 
 .drop-zone-active {
-	background: oklch(0.14 0.02 250) !important;
+	background: oklch(0.94 0.02 250) !important;
 }
 
-/* ─── Transitions ─── */
+/* ─── Markdown Content ─── */
+.markdown-content {
+	line-height: 1.6;
+}
+
+.markdown-content p {
+	margin-bottom: 0.5em;
+}
+
+.markdown-content p:last-child {
+	margin-bottom: 0;
+}
+
+.markdown-content code {
+	background: var(--muted);
+	padding: 0.1em 0.4em;
+	border-radius: 4px;
+	font-family: var(--font-mono);
+	font-size: 0.85em;
+}
+
+.markdown-content pre {
+	background: var(--secondary);
+	padding: var(--space-3);
+	border-radius: var(--radius);
+	overflow-x: auto;
+	margin: 0.5em 0;
+}
+
+.markdown-content pre code {
+	background: none;
+	padding: 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+	padding-left: 1.2em;
+	margin: 0.4em 0;
+}
+
+.markdown-content li {
+	margin-bottom: 0.2em;
+}
+
+/* ─── Reduced Motion ─── */
 @media (prefers-reduced-motion: reduce) {
+
 	*,
 	*::before,
 	*::after {

@@ -23,10 +23,14 @@ const RightSidebarTabs: React.FC<RightSidebarTabsProps> = ({
           key={tab.id}
           type="button"
           onClick={() => onTabChange(tab.id)}
-          className={`flex-1 px-3 py-2 text-[10px] font-semibold tracking-[0.1em] uppercase transition-colors ${activeTab === tab.id
-              ? "text-foreground border-b border-foreground"
-              : "text-muted-foreground hover:text-foreground/70"
+          className={`flex-1 px-3 py-2 text-[10px] font-semibold uppercase ${activeTab === tab.id
+            ? "text-foreground border-b border-foreground"
+            : "text-muted-foreground hover:text-foreground/70"
             }`}
+          style={{
+            letterSpacing: "0.08em",
+            transition: "var(--transition-fast)",
+          }}
         >
           {tab.label}
         </button>
