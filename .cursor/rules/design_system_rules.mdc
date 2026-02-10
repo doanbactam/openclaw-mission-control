@@ -1,0 +1,93 @@
+---
+description: UI/UX Design System rules based on Apple HIG, Codex IDE, and Conductor IDE. Apply when creating or modifying any frontend component, CSS, or layout.
+globs: **/*.tsx,**/*.css,**/*.ts
+---
+
+# OpenClaw Mission Control — Design Rules
+
+## Design Philosophy
+This project follows the Aesthetic-Usability Effect. The UI must feel like a premium developer tool, not a generic web app.
+
+**Three pillars (from Apple HIG):**
+1. **Clarity** — Every pixel has purpose. No decorative noise.
+2. **Deference** — UI yields to content. The interface "disappears."
+3. **Depth** — Layers, shadows, and motion create clear hierarchy.
+
+**Two IDE inspirations:**
+- **Codex IDE** (OpenAI Mac) — Command center for agent orchestration, parallel execution view, skill management.
+- **Conductor IDE** (Melty Labs) — Native-feeling, context-driven, workspace organization by status.
+
+## Color Rules
+- Dark-first: background starts at `oklch(0.08 0 0)`.
+- ONLY 4 accent colors: green, blue, orange, red. NEVER add a 5th.
+- NO pure black (`#000`) or pure white (`#fff`).
+- Text: primary `oklch(0.95 0 0)`, secondary `oklch(0.85 0 0)`, muted `oklch(0.55 0 0)`.
+- Contrast ratio ≥ 4.5:1 for text, ≥ 3:1 for graphical elements.
+- Always use design tokens from `index.css`, never hardcode colors.
+
+## Typography Rules
+- Font: Outfit (sans), SF Mono/Fira Code (mono).
+- Max 2 font-weights per component (usually 400 + 600).
+- Min font-weight: 400. Never use Light/Thin weights.
+- Heading: negative letter-spacing (-0.01em to -0.02em).
+- Overline/labels: positive letter-spacing (0.04em to 0.06em), uppercase.
+- Use `font-variant-numeric: tabular-nums` for number alignment.
+
+## Spacing Rules
+- Follow 4pt/8pt grid system.
+- Card padding: 16px.
+- Gap between cards: 8px.
+- Gap between kanban columns: 12px.
+- Always use spacing tokens, never hardcode pixel values.
+
+## Layout Rules
+- Header: 56px height.
+- Left sidebar: 240px fixed width.
+- Right sidebar: 280px fixed width.
+- Z-index scale: 0 (base) → 10 (header) → 30 (tray) → 40-50 (drawer) → 100 (agent tray) → 200 (modal) → 300 (toast) → 400 (tooltip).
+- Mobile: drawer pattern, ≥ 44px touch targets.
+
+## Motion Rules
+- Hover transitions: 100ms ease-out.
+- Expand/collapse: 200ms ease-out.
+- Slide/tray: 250ms cubic-bezier(0.4, 0, 0.2, 1).
+- Max transition: 400ms.
+- ALWAYS honor `prefers-reduced-motion: reduce`.
+- FORBIDDEN: bounce, parallax, typing animation, heavy shimmer.
+
+## Component Rules
+- Card: no heavy shadows in dark mode. Use lightness tiers instead.
+- Card hover: bg lightens one tier.
+- Card selected: blue ring 2px.
+- Buttons: primary, secondary, ghost, destructive variants only.
+- Modal: blur backdrop + scale(0.96→1) entry animation.
+- Tray: slide from edge, 380px width.
+
+## Icon Rules
+- Use Lucide React icons, stroke-width 1.5px.
+- Sizes: 16px (inline), 20px (button), 24px (header).
+- Color: inherit from text, never hardcode.
+- Always add `aria-label` for standalone icons.
+
+## Accessibility Rules
+- Keyboard navigable: Tab order, Enter/Space activate, Escape close.
+- Focus ring visible on all interactive elements.
+- ARIA labels for non-text elements.
+- No color-only status indicators — always pair with icon or text.
+- Semantic HTML: proper heading hierarchy (one h1 per page).
+
+## Anti-Patterns — NEVER DO
+- ❌ `#000000` background or `#ffffff` text
+- ❌ 5th accent color
+- ❌ Hardcoded px for spacing
+- ❌ Font-weight < 400
+- ❌ Animation > 400ms
+- ❌ Heavy box-shadow in dark mode
+- ❌ `!important` (fix specificity instead)
+- ❌ Inline styles
+- ❌ Random z-index values (999, 9999)
+- ❌ Color-only status indicators
+
+## Reference
+- Full design system documentation: `docs/DESIGN_SYSTEM.md`
+- Quick rules checklist: `docs/DESIGN_RULES.md`

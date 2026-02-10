@@ -25,17 +25,17 @@ const AgentsSidebar: React.FC<AgentsSidebarProps> = ({
 	if (agents === undefined) {
 		return (
 			<aside
-				className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-white border-r border-border flex flex-col overflow-hidden animate-pulse ${isOpen ? "is-open" : ""}`}
+				className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-card border-r border-border flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
 				aria-label="Agents"
 			>
-				<div className="px-6 py-5 border-b border-border h-[65px] bg-muted/20" />
-				<div className="flex-1 space-y-4 p-6">
-					{[...Array(8)].map((_, i) => (
-						<div key={i} className="flex gap-3 items-center">
-							<div className="w-10 h-10 bg-muted rounded-full" />
-							<div className="flex-1 space-y-2">
-								<div className="h-3 bg-muted rounded w-24" />
-								<div className="h-2 bg-muted rounded w-16" />
+				<div className="px-4 py-3 border-b border-border h-[44px]" />
+				<div className="flex-1 space-y-3 p-4 animate-pulse">
+					{[...Array(6)].map((_, i) => (
+						<div key={i} className="flex gap-2.5 items-center">
+							<div className="w-8 h-8 bg-muted rounded-full" />
+							<div className="flex-1 space-y-1.5">
+								<div className="h-2.5 bg-muted rounded w-20" />
+								<div className="h-2 bg-muted rounded w-14" />
 							</div>
 						</div>
 					))}
@@ -46,124 +46,140 @@ const AgentsSidebar: React.FC<AgentsSidebarProps> = ({
 
 	return (
 		<aside
-			className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-white border-r border-border flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
+			className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-card border-r border-border flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
 			aria-label="Agents"
 		>
-			<div className="flex items-center justify-between px-6 py-5 border-b border-border">
-				<div className="text-[11px] font-bold tracking-widest text-muted-foreground flex items-center gap-2">
-					<span className="w-1.5 h-1.5 bg-[var(--accent-green)] rounded-full" />{" "}
-					AGENTS
+			{/* Header */}
+			<div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+				<div className="flex items-center gap-2">
+					<span className="text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase">
+						Agents
+					</span>
+					<span className="text-[10px] text-muted-foreground/50 tabular-nums">
+						{agents.length}
+					</span>
+				</div>
+				<div className="flex items-center gap-1.5">
 					{onAddAgent && (
 						<button
 							type="button"
 							onClick={onAddAgent}
-							className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold text-white bg-[var(--accent-green)] rounded hover:opacity-90 transition-opacity"
+							className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
 							aria-label="Add agent"
+							title="Add agent"
 						>
-							<span className="text-xs leading-none">+</span> Add Agent
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
+								<path d="M7 3v8M3 7h8" />
+							</svg>
 						</button>
 					)}
-				</div>
-				<div className="flex items-center gap-2">
 					<button
 						type="button"
-						className="md:hidden inline-flex h-8 w-8 items-center justify-center rounded-lg bg-muted hover:bg-accent transition-colors"
+						className="md:hidden inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
 						onClick={onClose}
-						aria-label="Close agents sidebar"
+						aria-label="Close"
 					>
-						<span aria-hidden="true">✕</span>
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
+							<path d="M3 3l8 8M11 3l-8 8" />
+						</svg>
 					</button>
-					<div className="text-[11px] text-muted-foreground bg-muted px-2 py-0.5 rounded font-semibold">
-						{agents.length}
-					</div>
 				</div>
 			</div>
 
+			{/* Add Task button */}
 			{onAddTask && (
-				<div className="px-6 py-3 border-b border-border">
+				<div className="px-3 py-2 border-b border-border">
 					<button
 						type="button"
 						onClick={() => onAddTask?.()}
-						className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-semibold text-white bg-[var(--accent-blue)] rounded-lg hover:opacity-90 transition-opacity"
+						className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium text-primary-foreground bg-foreground rounded-md hover:bg-foreground/90 transition-colors"
 					>
-						<span className="text-base leading-none">+</span> Add Task
+						<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
+							<path d="M6 2v8M2 6h8" />
+						</svg>
+						Add Task
 					</button>
 				</div>
 			)}
 
-			<div className="flex-1 overflow-y-auto py-3">
+			{/* Agent List */}
+			<div className="flex-1 overflow-y-auto py-1">
 				{agents.map((agent) => (
 					<div
 						key={agent._id}
-						className="relative flex items-center gap-3 px-6 py-3 cursor-pointer hover:bg-muted transition-colors group"
+						className="relative flex items-center gap-2.5 px-4 py-2 cursor-pointer hover:bg-muted/50 transition-colors group"
 						onClick={() => onSelectAgent?.(agent._id)}
 					>
+						{/* Delete button */}
 						<button
 							type="button"
 							onClick={(e) => {
 								e.stopPropagation();
 								if (confirm(`Delete ${agent.name}?`)) {
-										deleteAgent({ id: agent._id, tenantId: DEFAULT_TENANT_ID });
+									deleteAgent({ id: agent._id, tenantId: DEFAULT_TENANT_ID });
 								}
 							}}
-							className="absolute left-1 top-1 opacity-0 group-hover:opacity-100 transition-opacity inline-flex h-[22px] w-[22px] items-center justify-center rounded hover:bg-[var(--accent-red)]/10 text-[var(--accent-red)] z-10"
+							className="absolute left-0.5 top-0.5 opacity-0 group-hover:opacity-100 transition-opacity inline-flex h-5 w-5 items-center justify-center rounded text-destructive/60 hover:text-destructive hover:bg-destructive/10 z-10"
 							aria-label={`Delete ${agent.name}`}
-							title={`Delete ${agent.name}`}
 						>
-							<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/></svg>
+							<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
+								<path d="M2 2l6 6M8 2l-6 6" />
+							</svg>
 						</button>
-						<div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center text-xl border border-border group-hover:bg-white transition-colors">
+
+						{/* Avatar */}
+						<div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center text-sm border border-border/50 shrink-0">
 							{agent.avatar}
 						</div>
-						<div className="flex-1">
-							<div className="flex items-center gap-1.5 mb-0.5">
-								<span className="text-sm font-semibold text-foreground">
+
+						{/* Info */}
+						<div className="flex-1 min-w-0">
+							<div className="flex items-center gap-1.5">
+								<span className="text-[13px] font-medium text-foreground truncate">
 									{agent.name}
 								</span>
 								<span
-									className={`text-[9px] font-bold px-1 py-0.5 rounded text-white ${
-										agent.level === "LEAD"
-											? "bg-[var(--status-lead)]"
+									className={`text-[8px] font-bold px-1 py-0.5 rounded text-white/90 ${agent.level === "LEAD"
+											? "bg-[var(--accent-orange)]/80"
 											: agent.level === "INT"
-												? "bg-[var(--status-int)]"
-												: "bg-[var(--status-spc)]"
-									}`}
+												? "bg-[var(--accent-blue)]/80"
+												: "bg-muted-foreground/60"
+										}`}
 								>
 									{agent.level}
 								</span>
 							</div>
-							<div className="text-xs text-muted-foreground">{agent.role}</div>
+							<div className="text-[11px] text-muted-foreground truncate">{agent.role}</div>
 						</div>
-						<div className="flex items-center gap-2">
+
+						{/* Actions */}
+						<div className="flex items-center gap-1.5 shrink-0">
 							<button
 								type="button"
 								onClick={(e) => {
 									e.stopPropagation();
-										updateStatus({
-											id: agent._id,
-											status: agent.status === "active" ? "idle" : "active",
-											tenantId: DEFAULT_TENANT_ID,
-										});
+									updateStatus({
+										id: agent._id,
+										status: agent.status === "active" ? "idle" : "active",
+										tenantId: DEFAULT_TENANT_ID,
+									});
 								}}
-								className={`text-[9px] font-bold flex items-center gap-1 tracking-wider uppercase cursor-pointer hover:opacity-70 transition-opacity ${
-									agent.status === "active"
-										? "text-[var(--status-working)]"
+								className={`flex items-center gap-1 text-[9px] font-medium tracking-wider uppercase cursor-pointer hover:opacity-70 transition-opacity ${agent.status === "active"
+										? "text-[var(--accent-green)]"
 										: agent.status === "blocked"
-											? "text-[var(--accent-red)]"
-											: "text-muted-foreground"
-								}`}
+											? "text-destructive"
+											: "text-muted-foreground/60"
+									}`}
 								title={agent.status === "active" ? "Set idle" : "Set active"}
 							>
 								<span
-									className={`w-1.5 h-1.5 rounded-full ${
-										agent.status === "active"
-											? "bg-[var(--status-working)]"
+									className={`w-1.5 h-1.5 rounded-full ${agent.status === "active"
+											? "bg-[var(--accent-green)]"
 											: agent.status === "blocked"
-												? "bg-[var(--accent-red)]"
-												: "bg-muted-foreground"
-									}`}
+												? "bg-destructive"
+												: "bg-muted-foreground/40"
+										}`}
 								/>
-								{agent.status}
 							</button>
 							{onAddTask && (
 								<button
@@ -173,15 +189,16 @@ const AgentsSidebar: React.FC<AgentsSidebarProps> = ({
 										onAddTask(agent._id);
 									}}
 									disabled={agent.status !== "active"}
-									className={`inline-flex h-[18px] w-[18px] items-center justify-center rounded text-white text-base font-bold leading-none transition-opacity ${
-										agent.status !== "active"
-											? "bg-muted-foreground/40 cursor-not-allowed"
-											: "bg-[var(--accent-blue)] hover:opacity-90"
-									}`}
+									className={`inline-flex h-5 w-5 items-center justify-center rounded text-xs transition-colors ${agent.status !== "active"
+											? "text-muted-foreground/30 cursor-not-allowed"
+											: "text-muted-foreground hover:text-[var(--accent-blue)] hover:bg-muted"
+										}`}
 									aria-label={`Add task for ${agent.name}`}
 									title={agent.status !== "active" ? `${agent.name} is idle` : `Add task for ${agent.name}`}
 								>
-									+
+									<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
+										<path d="M5 1.5v7M1.5 5h7" />
+									</svg>
 								</button>
 							)}
 						</div>

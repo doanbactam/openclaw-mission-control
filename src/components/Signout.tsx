@@ -8,10 +8,10 @@ function SignOutButton() {
 		<>
 			{isAuthenticated && (
 				<button
-					className="bg-destructive text-destructive-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-destructive/80"
+					className="text-[10px] font-medium text-muted-foreground hover:text-foreground tracking-wider transition-colors cursor-pointer"
 					onClick={() => void signOut()}
 				>
-					Sign out
+					LOGOUT
 				</button>
 			)}
 		</>

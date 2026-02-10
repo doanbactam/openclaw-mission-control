@@ -201,39 +201,101 @@ function formatPromptWithSource(prompt: string, source: string | null): string {
   return prompt;
 }
 
+/**
+ * Find the onAgentEvent function from the OpenClaw dist modules.
+ *
+ * OpenClaw bundles are minified: exported names like `onAgentEvent` are aliased
+ * (e.g. `onAgentEvent as Ut`). We parse the export line to find the alias,
+ * then access it from the dynamically imported module.
+ *
+ * Because ESM module cache is shared across the process, importing the same
+ * file that gateway already loaded returns THE SAME module instance —
+ * guaranteeing our listener is registered in the same event bus.
+ */
 async function findAgentEventsModule(): Promise<{
   onAgentEvent: (listener: (evt: AgentEventPayload) => void) => () => void;
 } | null> {
+  // 1. Check globalThis (set by gateway if available)
   const g = globalThis as Record<string, unknown>;
   if (g.__openclawAgentEvents && typeof (g.__openclawAgentEvents as Record<string, unknown>).onAgentEvent === "function") {
+    console.log("[mission-control] Found agent-events via globalThis");
     return g.__openclawAgentEvents as { onAgentEvent: (listener: (evt: AgentEventPayload) => void) => () => void };
   }
 
-  const searchPaths = [
-    "/usr/local/lib/node_modules/openclaw/dist/infra/agent-events.js",
-    "/opt/homebrew/lib/node_modules/openclaw/dist/infra/agent-events.js",
-  ];
+  // 2. Find the OpenClaw dist directory
+  const distPaths: string[] = [];
+  const home = os.homedir();
 
+  // From process.argv[1] (the gateway entry point)
   const mainPath = process.argv[1];
   if (mainPath) {
     const mainDir = path.dirname(mainPath);
-    searchPaths.unshift(path.join(mainDir, "infra", "agent-events.js"));
-    searchPaths.unshift(path.join(mainDir, "..", "dist", "infra", "agent-events.js"));
+    distPaths.push(mainDir);
+    distPaths.push(path.join(mainDir, "..", "dist"));
   }
 
-  const home = os.homedir();
+  // Windows: npm global
   if (home) {
-    searchPaths.push(path.join(home, ".npm-global", "lib", "node_modules", "openclaw", "dist", "infra", "agent-events.js"));
+    distPaths.push(path.join(home, "AppData", "Roaming", "npm", "node_modules", "openclaw", "dist"));
+    // Linux/macOS
+    distPaths.push(path.join(home, ".npm-global", "lib", "node_modules", "openclaw", "dist"));
   }
 
-  for (const searchPath of searchPaths) {
+  // System paths
+  distPaths.push("/usr/local/lib/node_modules/openclaw/dist");
+  distPaths.push("/opt/homebrew/lib/node_modules/openclaw/dist");
+
+  for (const distDir of distPaths) {
+    if (!fs.existsSync(distDir)) continue;
+
     try {
-      if (fs.existsSync(searchPath)) {
-        const module = await import(`file://${searchPath}`);
-        if (typeof module.onAgentEvent === "function") return module;
+      // Scan for loader-*.js and reply-*.js first (shared gateway modules that export onAgentEvent)
+      const files = fs.readdirSync(distDir);
+      const candidates = files
+        .filter(f => f.endsWith(".js"))
+        .sort((a, b) => {
+          const scoreA = a.startsWith("loader-") ? 0 : a.startsWith("reply-") ? 1 : 2;
+          const scoreB = b.startsWith("loader-") ? 0 : b.startsWith("reply-") ? 1 : 2;
+          return scoreA - scoreB;
+        });
+
+      for (const file of candidates) {
+        // Only try files that are likely to export onAgentEvent
+        // (loader-*.js and reply-*.js are the main shared modules)
+        if (!file.startsWith("loader-") && !file.startsWith("reply-")) continue;
+
+        const filePath = path.join(distDir, file);
+        try {
+          // Read the last portion of the file to find the export map
+          // The export line looks like: export { ..., onAgentEvent as Ut, ... }
+          const content = fs.readFileSync(filePath, "utf-8");
+          const exportMatch = content.match(/onAgentEvent as (\w+)/);
+          if (!exportMatch) {
+            console.log(`[mission-control] ${file}: no onAgentEvent export mapping found`);
+            continue;
+          }
+
+          const alias = exportMatch[1];
+          console.log(`[mission-control] ${file}: found onAgentEvent aliased as '${alias}'`);
+
+          // Import the module (ESM cache returns same instance as gateway)
+          const fileUrl = filePath.startsWith("/")
+            ? `file://${filePath}`
+            : `file:///${filePath.replace(/\\/g, "/")}`;
+          const mod = await import(fileUrl);
+
+          if (typeof mod[alias] === "function") {
+            console.log(`[mission-control] ✓ Found onAgentEvent via alias '${alias}' in: ${file}`);
+            return { onAgentEvent: mod[alias] };
+          } else {
+            console.log(`[mission-control] ${file}: alias '${alias}' is not a function (type: ${typeof mod[alias]})`);
+          }
+        } catch (err) {
+          console.log(`[mission-control] Failed to process ${file}:`, err instanceof Error ? err.message : err);
+        }
       }
-    } catch {
-      // Continue
+    } catch (err) {
+      console.log(`[mission-control] Failed to scan ${distDir}:`, err instanceof Error ? err.message : err);
     }
   }
 
@@ -315,14 +377,10 @@ const handler = async (event: HookEvent) => {
             }
 
             // Determine if this is a real user run or a system follow-up
-            // Check both: messageChannel from event data (if available) and
-            // source detected by extractCleanPrompt (webchat metadata, Telegram brackets, etc.)
             const userChannels = ["telegram", "webchat", "whatsapp", "discord", "slack", "signal", "sms", "imessage", "nostr"];
             const isUserChannel = (messageChannel && userChannels.includes(messageChannel)) || source !== null;
 
             if (!isUserChannel && rawPrompt && (rawPrompt.startsWith("System:") || rawPrompt.startsWith("Read HEARTBEAT"))) {
-              // System follow-up runs (exec notifications) — don't create new tasks,
-              // but track them so tool events link to the original task
               console.log("[mission-control] System follow-up run, linking to previous runId:", lastRealRunId.get(sessionKey));
               return;
             }
@@ -459,9 +517,7 @@ const handler = async (event: HookEvent) => {
           }
 
           // Capture files from exec/process tool results (e.g., images from nano banana)
-          // exec returns "Command still running", the actual output comes via the process tool
           if ((toolName === "exec" || toolName === "process") && phase === "result") {
-            // Extract text from the result (can be string or content array)
             const rawResult = evt.data?.result as string | { content?: Array<{ type?: string; text?: string }> } | undefined;
             let text = "";
             if (typeof rawResult === "string") {
@@ -476,7 +532,6 @@ const handler = async (event: HookEvent) => {
             if (!text && output) text = output;
 
             if (text) {
-              // Look for file paths with media extensions in the output
               const fileMatch = text.match(/(\/\S+\.(?:png|jpg|jpeg|gif|webp|svg|mp4|mp3|wav|pdf))/i);
 
               if (fileMatch && fileMatch[1]) {

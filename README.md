@@ -63,17 +63,18 @@ When an OpenClaw agent runs:
 
 #### 1. Install the Mission Control Hook
 
-Copy the hook to your OpenClaw hooks directory:
+Copy the hook from this project to your global OpenClaw hooks directory:
 
 ```bash
-cp -r ~/.openclaw/hooks/mission-control ~/.openclaw/hooks/
+# From the openclaw-mission-control project directory
+cp -r hooks/mission-control ~/.openclaw/hooks/
 ```
 
-Or create it manually at `~/.openclaw/hooks/mission-control/handler.ts`.
+Or create it manually by copying the files from `hooks/mission-control/` to `~/.openclaw/hooks/mission-control/`.
 
 #### 2. Configure the Webhook URL
 
-Add the Mission Control URL to your OpenClaw config (`~/.openclaw/config.jsonc`):
+Add the Mission Control URL to your OpenClaw config (`~/.openclaw/openclaw.json`):
 
 ```jsonc
 {

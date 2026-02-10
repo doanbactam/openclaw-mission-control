@@ -52,9 +52,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 	});
 
 	const style = transform
-		? {
-				transform: CSS.Translate.toString(transform),
-		  }
+		? { transform: CSS.Translate.toString(transform) }
 		: undefined;
 
 	return (
@@ -62,27 +60,28 @@ const TaskCard: React.FC<TaskCardProps> = ({
 			ref={setNodeRef}
 			style={{
 				...style,
-				borderLeft:
+				borderLeftColor:
 					isSelected || isOverlay
 						? undefined
-						: `4px solid ${task.borderColor || "transparent"}`,
+						: task.borderColor || "transparent",
+				borderLeftWidth: isSelected || isOverlay ? undefined : "3px",
 			}}
-				className={`min-w-0 bg-white rounded-lg p-3 sm:p-4 shadow-sm flex flex-col gap-3 border transition-all cursor-pointer select-none ${
-				isDragging ? "dragging-card" : "hover:-translate-y-0.5 hover:shadow-md"
-			} ${
-				isSelected
-					? "ring-2 ring-[var(--accent-blue)] border-transparent"
-					: "border-border"
-			} ${columnId === "archived" ? "opacity-60" : ""} ${
-				columnId === "in_progress" ? "card-running" : ""
-			} ${isOverlay ? "drag-overlay" : ""}`}
+			className={`min-w-0 bg-card rounded-lg p-3 flex flex-col gap-2 border border-border transition-all duration-150 cursor-pointer select-none ${isDragging ? "dragging-card" : "hover:bg-accent/50"
+				} ${isSelected
+					? "ring-1 ring-[var(--accent-blue)] border-[var(--accent-blue)]/30"
+					: ""
+				} ${columnId === "archived" ? "opacity-50" : ""} ${columnId === "in_progress" ? "card-running" : ""
+				} ${isOverlay ? "drag-overlay" : ""}`}
 			onClick={onClick}
 			{...listeners}
 			{...attributes}
 		>
-			<div className="flex justify-between text-muted-foreground text-sm">
-				<span className="text-base">↑</span>
-				<div className="flex items-center gap-2">
+			{/* Header row */}
+			<div className="flex justify-between items-start gap-2">
+				<h3 className="text-[13px] font-medium text-foreground leading-snug break-words flex-1">
+					{task.title}
+				</h3>
+				<div className="flex items-center gap-1 shrink-0">
 					{(columnId === "inbox" || columnId === "assigned") && currentUserAgentId && onPlay && (
 						<button
 							onClick={(e) => {
@@ -92,12 +91,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
 							className="p-1 hover:bg-muted rounded transition-colors text-muted-foreground hover:text-[var(--accent-blue)]"
 							title="Start task"
 						>
-							<IconPlayerPlay size={14} />
+							<IconPlayerPlay size={12} />
 						</button>
 					)}
 					{columnId === "in_progress" && (
 						<span className="p-1 text-[var(--accent-blue)]" title="Running">
-							<IconLoader2 size={14} className="animate-spin" />
+							<IconLoader2 size={12} className="animate-spin" />
 						</span>
 					)}
 					{columnId === "done" && currentUserAgentId && onArchive && (
@@ -107,45 +106,50 @@ const TaskCard: React.FC<TaskCardProps> = ({
 								onArchive(task._id);
 							}}
 							className="p-1 hover:bg-muted rounded transition-colors text-muted-foreground hover:text-foreground"
-							title="Archive task"
+							title="Archive"
 						>
-							<IconArchive size={14} />
+							<IconArchive size={12} />
 						</button>
 					)}
-					<span className="tracking-widest">...</span>
 				</div>
 			</div>
-				<h3 className="text-sm font-semibold text-foreground leading-tight break-words">
-					{task.title}
-				</h3>
-				<p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 break-words">
+
+			{/* Description */}
+			{task.description && task.description !== task.title && (
+				<p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 break-words">
 					{task.description}
 				</p>
-			<div className="flex justify-between items-center mt-1">
-				{task.assigneeIds && task.assigneeIds.length > 0 && (
-					<div className="flex items-center gap-1.5">
-						<span className="text-xs">👤</span>
-						<span className="text-[11px] font-semibold text-foreground">
+			)}
+
+			{/* Footer */}
+			<div className="flex justify-between items-center">
+				<div className="flex items-center gap-3">
+					{task.assigneeIds && task.assigneeIds.length > 0 && (
+						<span className="text-[10px] font-medium text-muted-foreground">
 							{getAgentName(task.assigneeIds[0] as string)}
 						</span>
-					</div>
-				)}
+					)}
+				</div>
 				{task.lastMessageTime && (
-					<span className="text-[11px] text-muted-foreground">
+					<span className="text-[10px] text-muted-foreground/60 tabular-nums">
 						{formatRelativeTime(task.lastMessageTime)}
 					</span>
 				)}
 			</div>
-			<div className="flex flex-wrap gap-1.5">
-				{task.tags.map((tag) => (
-					<span
-						key={tag}
-						className="text-[10px] px-2 py-0.5 bg-muted rounded font-medium text-muted-foreground"
-					>
-						{tag}
-					</span>
-				))}
-			</div>
+
+			{/* Tags */}
+			{task.tags.length > 0 && (
+				<div className="flex flex-wrap gap-1">
+					{task.tags.map((tag) => (
+						<span
+							key={tag}
+							className="text-[9px] px-1.5 py-0.5 bg-muted rounded font-medium text-muted-foreground"
+						>
+							{tag}
+						</span>
+					))}
+				</div>
+			)}
 		</div>
 	);
 };

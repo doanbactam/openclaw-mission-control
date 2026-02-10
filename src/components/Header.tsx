@@ -11,102 +11,82 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ onOpenAgents, onOpenLiveFeed }) => {
 	const [time, setTime] = useState(new Date());
-	
-	// Fetch data for dynamic counts
+
 	const agents = useQuery(api.queries.listAgents, { tenantId: DEFAULT_TENANT_ID });
 	const tasks = useQuery(api.queries.listTasks, { tenantId: DEFAULT_TENANT_ID });
 
-	// Calculate counts
-	const activeAgentsCount = agents ? agents.filter(a => a.status === "active").length : 0;
-	const tasksInQueueCount = tasks ? tasks.filter(t => t.status !== "done").length : 0;
+	const activeCount = agents ? agents.filter(a => a.status === "active").length : 0;
+	const queueCount = tasks ? tasks.filter(t => t.status !== "done" && t.status !== "archived").length : 0;
 
 	useEffect(() => {
 		const timer = setInterval(() => setTime(new Date()), 1000);
 		return () => clearInterval(timer);
 	}, []);
 
-	const formatTime = (date: Date) => {
-		return date.toLocaleTimeString("en-US", {
-			hour12: false,
-			hour: "2-digit",
-			minute: "2-digit",
-			second: "2-digit",
-		});
-	};
+	const formatTime = (date: Date) =>
+		date.toLocaleTimeString("en-US", { hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
-	const formatDate = (date: Date) => {
-		return date
-			.toLocaleDateString("en-US", {
-				weekday: "short",
-				month: "short",
-				day: "numeric",
-			})
-			.toUpperCase();
-	};
+	const formatDate = (date: Date) =>
+		date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }).toUpperCase();
 
 	return (
-		<header className="[grid-area:header] flex items-center justify-between px-3 md:px-6 bg-white border-b border-border z-10">
-			<div className="flex items-center gap-2 md:gap-4 min-w-0">
-				<div className="flex md:hidden items-center gap-2">
-					<button
-						type="button"
-						className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted hover:bg-accent transition-colors"
-						onClick={onOpenAgents}
-						aria-label="Open agents sidebar"
-					>
-						<span aria-hidden="true">☰</span>
-					</button>
-				</div>
-				<div className="flex items-center gap-2 min-w-0">
-					<span className="text-2xl text-[var(--accent-orange)]">◇</span>
-					<h1 className="text-base md:text-lg font-semibold tracking-wider text-foreground truncate">
-						MISSION CONTROL
-					</h1>
-				</div>
-				<div className="hidden sm:block text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full font-medium">
-					SiteName
-				</div>
-			</div>
-
-			<div className="hidden md:flex items-center gap-10">
-				<div className="flex flex-col items-center">
-					<div className="text-2xl font-bold text-foreground">
-						{agents ? activeAgentsCount : "-"}
-					</div>
-					<div className="text-[10px] font-semibold text-muted-foreground tracking-tighter">
-						AGENTS ACTIVE
-					</div>
-				</div>
-				<div className="w-px h-8 bg-border" />
-				<div className="flex flex-col items-center">
-					<div className="text-2xl font-bold text-foreground">
-						{tasks ? tasksInQueueCount : "-"}
-					</div>
-					<div className="text-[10px] font-semibold text-muted-foreground tracking-tighter">
-						TASKS IN QUEUE
-					</div>
-				</div>
-			</div>
-
-			<div className="flex items-center gap-2 md:gap-6">
+		<header className="[grid-area:header] flex items-center justify-between px-4 md:px-5 bg-card border-b border-border z-10">
+			{/* Left: Brand + mobile menu */}
+			<div className="flex items-center gap-3 min-w-0">
 				<button
 					type="button"
-					className="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted hover:bg-accent transition-colors"
+					className="md:hidden inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted hover:bg-accent transition-colors text-muted-foreground"
+					onClick={onOpenAgents}
+					aria-label="Open agents sidebar"
+				>
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+						<path d="M2 4h12M2 8h12M2 12h12" />
+					</svg>
+				</button>
+				<div className="flex items-center gap-2">
+					<span className="text-lg text-[var(--accent-orange)]">◇</span>
+					<h1 className="text-sm font-semibold tracking-[0.15em] text-foreground/90 uppercase">
+						Mission Control
+					</h1>
+				</div>
+			</div>
+
+			{/* Center: Stats */}
+			<div className="hidden md:flex items-center gap-6">
+				<div className="flex items-center gap-2">
+					<span className="text-xs font-medium text-muted-foreground tracking-wider">AGENTS</span>
+					<span className="text-sm font-semibold text-foreground tabular-nums">{agents ? activeCount : "–"}</span>
+				</div>
+				<div className="w-px h-4 bg-border" />
+				<div className="flex items-center gap-2">
+					<span className="text-xs font-medium text-muted-foreground tracking-wider">QUEUE</span>
+					<span className="text-sm font-semibold text-foreground tabular-nums">{tasks ? queueCount : "–"}</span>
+				</div>
+			</div>
+
+			{/* Right: Clock + Status */}
+			<div className="flex items-center gap-3 md:gap-4">
+				<button
+					type="button"
+					className="md:hidden inline-flex h-8 w-8 items-center justify-center rounded-md bg-muted hover:bg-accent transition-colors text-muted-foreground"
 					onClick={onOpenLiveFeed}
 					aria-label="Open live feed sidebar"
 				>
-					<span aria-hidden="true">☰</span>
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+						<circle cx="8" cy="8" r="2" />
+						<path d="M4.5 4.5a5 5 0 0 1 7 0M3 3a7.5 7.5 0 0 1 10 0" />
+					</svg>
 				</button>
-				<div className="text-right">
-					<div className="text-xl font-semibold text-foreground tabular-nums">
+				<div className="text-right hidden sm:block">
+					<div className="text-sm font-medium text-foreground/80 tabular-nums font-mono">
 						{formatTime(time)}
 					</div>
-					<div className="text-[10px] font-medium text-muted-foreground tracking-[0.5px]">
+					<div className="text-[9px] font-medium text-muted-foreground tracking-wider">
 						{formatDate(time)}
 					</div>
 				</div>
-				<div className="flex items-center gap-2 bg-[#e6fcf5] text-[#0ca678] px-3 py-1.5 rounded-full text-[11px] font-bold tracking-[0.5px]">
-					<span className="w-2 h-2 bg-[#0ca678] rounded-full" />
+				<div className="flex items-center gap-1.5 text-[10px] font-semibold tracking-wider text-[var(--accent-green)]">
+					<span className="w-1.5 h-1.5 bg-[var(--accent-green)] rounded-full animate-pulse" />
 					ONLINE
 				</div>
 				<SignOutButton />

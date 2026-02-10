@@ -40,23 +40,23 @@ function formatRelativeTime(timestamp: number | null): string {
 	const hours = Math.floor(minutes / 60);
 	const days = Math.floor(hours / 24);
 
-	if (seconds < 60) return "just now";
-	if (minutes < 60) return `${minutes}m ago`;
-	if (hours < 24) return `${hours}h ago`;
-	if (days < 7) return `${days}d ago`;
+	if (seconds < 60) return "now";
+	if (minutes < 60) return `${minutes}m`;
+	if (hours < 24) return `${hours}h`;
+	if (days < 7) return `${days}d`;
 
 	return new Date(timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 
 const columns = [
-	{ id: "inbox", label: "INBOX", color: "var(--text-subtle)" },
+	{ id: "inbox", label: "INBOX", color: "var(--muted-foreground)" },
 	{ id: "assigned", label: "ASSIGNED", color: "var(--accent-orange)" },
 	{ id: "in_progress", label: "IN PROGRESS", color: "var(--accent-blue)" },
-	{ id: "review", label: "REVIEW", color: "var(--text-main)" },
+	{ id: "review", label: "REVIEW", color: "var(--foreground)" },
 	{ id: "done", label: "DONE", color: "var(--accent-green)" },
 ];
 
-const archivedColumn = { id: "archived", label: "ARCHIVED", color: "var(--text-subtle)" };
+const archivedColumn = { id: "archived", label: "ARCHIVED", color: "var(--muted-foreground)" };
 
 interface MissionQueueProps {
 	selectedTaskId: Id<"tasks"> | null;
@@ -77,19 +77,17 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
-			activationConstraint: {
-				distance: 8, // 8px movement required to start drag
-			},
+			activationConstraint: { distance: 8 },
 		})
 	);
 
 	if (tasks === undefined || agents === undefined) {
 		return (
-			<main className="[grid-area:main] bg-secondary flex flex-col overflow-hidden animate-pulse">
-				<div className="h-[65px] bg-white border-b border-border" />
-				<div className="flex-1 grid grid-cols-5 gap-px bg-border">
+			<main className="[grid-area:main] bg-background flex flex-col overflow-hidden">
+				<div className="h-[44px] bg-card border-b border-border" />
+				<div className="flex-1 grid grid-cols-5 gap-px bg-border animate-pulse">
 					{[...Array(5)].map((_, i) => (
-						<div key={i} className="bg-secondary" />
+						<div key={i} className="bg-background" />
 					))}
 				</div>
 			</main>
@@ -102,9 +100,7 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 
 	const handleDragStart = (event: DragStartEvent) => {
 		const task = tasks.find((t) => t._id === event.active.id);
-		if (task) {
-			setActiveTask(task as Task);
-		}
+		if (task) setActiveTask(task as Task);
 	};
 
 	const handleDragEnd = async (event: DragEndEvent) => {
@@ -118,22 +114,22 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 		const task = tasks.find((t) => t._id === taskId);
 
 		if (task && task.status !== newStatus) {
-				await updateStatus({
-					taskId,
-					status: newStatus,
-					agentId: currentUserAgent._id,
-					tenantId: DEFAULT_TENANT_ID,
-				});
+			await updateStatus({
+				taskId,
+				status: newStatus,
+				agentId: currentUserAgent._id,
+				tenantId: DEFAULT_TENANT_ID,
+			});
 		}
 	};
 
 	const handleArchive = (taskId: Id<"tasks">) => {
 		if (currentUserAgent) {
-				archiveTask({
-					taskId,
-					agentId: currentUserAgent._id,
-					tenantId: DEFAULT_TENANT_ID,
-				});
+			archiveTask({
+				taskId,
+				agentId: currentUserAgent._id,
+				tenantId: DEFAULT_TENANT_ID,
+			});
 		}
 	};
 
@@ -158,10 +154,10 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 			? `${task.title}\n\n${task.description}`
 			: task.title;
 
-			const messages = await convex.query(api.queries.listMessages, {
-				taskId: task._id,
-				tenantId: DEFAULT_TENANT_ID,
-			});
+		const messages = await convex.query(api.queries.listMessages, {
+			taskId: task._id,
+			tenantId: DEFAULT_TENANT_ID,
+		});
 		if (messages && messages.length > 0) {
 			const sorted = [...messages].sort((a, b) => a._creationTime - b._creationTime);
 			const thread = sorted.map(m => `[${m.agentName}]: ${m.content}`).join("\n\n");
@@ -190,11 +186,11 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 			if (res.ok) {
 				const data = await res.json();
 				if (data.runId) {
-						await linkRun({
-							taskId,
-							openclawRunId: data.runId,
-							tenantId: DEFAULT_TENANT_ID,
-						});
+					await linkRun({
+						taskId,
+						openclawRunId: data.runId,
+						tenantId: DEFAULT_TENANT_ID,
+					});
 				}
 			}
 		} catch (err) {
@@ -205,12 +201,12 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 	const handlePlay = async (taskId: Id<"tasks">) => {
 		if (!currentUserAgent) return;
 
-			await updateStatus({
-				taskId,
-				status: "in_progress",
-				agentId: currentUserAgent._id,
-				tenantId: DEFAULT_TENANT_ID,
-			});
+		await updateStatus({
+			taskId,
+			status: "in_progress",
+			agentId: currentUserAgent._id,
+			tenantId: DEFAULT_TENANT_ID,
+		});
 
 		const task = tasks.find((t) => t._id === taskId);
 		if (!task) return;
@@ -220,48 +216,43 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 	};
 
 	const displayColumns = showArchived ? [...columns, archivedColumn] : columns;
+	const activeCount = tasks.filter((t) => t.status !== "done" && t.status !== "archived").length;
 	const archivedCount = tasks.filter((t) => t.status === "archived").length;
 
-		return (
-			<main className="[grid-area:main] bg-secondary flex min-h-0 flex-col overflow-hidden">
-				<div className="shrink-0 flex items-center justify-between px-6 py-5 bg-white border-b border-border">
-				<div className="text-[11px] font-bold tracking-widest text-muted-foreground flex items-center gap-2">
-					<span className="w-1.5 h-1.5 bg-[var(--accent-orange)] rounded-full" />{" "}
-					MISSION QUEUE
+	return (
+		<main className="[grid-area:main] bg-background flex min-h-0 flex-col overflow-hidden">
+			{/* Toolbar */}
+			<div className="shrink-0 flex items-center justify-between px-4 py-2.5 bg-card border-b border-border">
+				<div className="flex items-center gap-3">
+					<span className="text-[10px] font-semibold tracking-[0.15em] text-muted-foreground uppercase">
+						Queue
+					</span>
+					<span className="text-[10px] text-muted-foreground/50 tabular-nums">
+						{activeCount} active
+					</span>
 				</div>
-				<div className="flex gap-2">
-					<div className="text-[11px] font-semibold px-3 py-1 rounded bg-muted text-muted-foreground flex items-center gap-1.5">
-						<span className="text-sm">📦</span>{" "}
-						{tasks.filter((t) => t.status === "inbox").length}
-					</div>
-					<div className="text-[11px] font-semibold px-3 py-1 rounded bg-[#f0f0f0] text-[#999]">
-						{tasks.filter((t) => t.status !== "done" && t.status !== "archived").length} active
-					</div>
-					<button
-						onClick={() => setShowArchived(!showArchived)}
-						className={`text-[11px] font-semibold px-3 py-1 rounded flex items-center gap-1.5 transition-colors ${
-							showArchived
-								? "bg-[var(--accent-blue)] text-white"
-								: "bg-[#f0f0f0] text-[#999] hover:bg-[#e5e5e5]"
+				<button
+					onClick={() => setShowArchived(!showArchived)}
+					className={`flex items-center gap-1.5 text-[10px] font-medium px-2 py-1 rounded transition-colors ${showArchived
+							? "bg-accent text-foreground"
+							: "text-muted-foreground hover:text-foreground hover:bg-muted"
 						}`}
-					>
-						<IconArchive size={14} />
-						{showArchived ? "Hide Archived" : "Show Archived"}
-						{archivedCount > 0 && (
-							<span className={`px-1.5 rounded-full text-[10px] ${showArchived ? "bg-white/20" : "bg-[#d0d0d0]"}`}>
-								{archivedCount}
-							</span>
-						)}
-					</button>
-				</div>
+				>
+					<IconArchive size={12} />
+					{archivedCount > 0 && (
+						<span className="tabular-nums">{archivedCount}</span>
+					)}
+				</button>
 			</div>
 
+			{/* Kanban */}
 			<DndContext
 				sensors={sensors}
 				onDragStart={handleDragStart}
 				onDragEnd={handleDragEnd}
 			>
-					<div className={`flex-1 min-h-0 grid gap-px bg-border overflow-x-auto overflow-y-hidden ${showArchived ? "grid-cols-6" : "grid-cols-5"}`}>
+				<div className={`flex-1 min-h-0 grid gap-px bg-border overflow-x-auto overflow-y-hidden ${showArchived ? "grid-cols-6" : "grid-cols-5"
+					}`}>
 					{displayColumns.map((col) => (
 						<KanbanColumn
 							key={col.id}
@@ -293,7 +284,7 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 						<TaskCard
 							task={activeTask}
 							isSelected={false}
-							onClick={() => {}}
+							onClick={() => { }}
 							getAgentName={getAgentName}
 							formatRelativeTime={formatRelativeTime}
 							columnId={activeTask.status}
