@@ -2,7 +2,7 @@ import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { Id } from "../../convex/_generated/dataModel";
-import { IconArchive, IconPlayerPlay, IconLoader2 } from "@tabler/icons-react";
+import { Archive, Play, Loader2 } from "lucide-react";
 
 interface Task {
 	_id: Id<"tasks">;
@@ -67,11 +67,11 @@ const TaskCard: React.FC<TaskCardProps> = ({
 				borderLeftWidth: isSelected || isOverlay ? undefined : "3px",
 				transition: "var(--transition-fast)",
 			}}
-			className={`min-w-0 bg-card rounded-lg p-3 flex flex-col gap-2 border border-border cursor-pointer select-none ${isDragging ? "dragging-card" : "hover:bg-accent/40"
+			className={`min-w-0 bg-card rounded-xl p-4 flex flex-col gap-2 border border-border cursor-pointer select-none transition-all duration-200 group ${isDragging ? "dragging-card rotate-2 scale-[1.02] shadow-xl" : "hover:bg-accent/50 hover:border-accent hover:shadow-lg hover:-translate-y-0.5"
 				} ${isSelected
-					? "ring-1 ring-[var(--accent-blue)] border-[var(--accent-blue)]/30"
+					? "ring-2 ring-[var(--accent-blue)] border-[var(--accent-blue)]"
 					: ""
-				} ${columnId === "archived" ? "opacity-50" : ""} ${columnId === "in_progress" ? "card-running" : ""
+				} ${columnId === "archived" ? "opacity-50 grayscale" : ""} ${columnId === "in_progress" ? "card-running" : ""
 				} ${isOverlay ? "drag-overlay" : ""}`}
 			onClick={onClick}
 			{...listeners}
@@ -93,12 +93,12 @@ const TaskCard: React.FC<TaskCardProps> = ({
 							style={{ transition: "var(--transition-fast)" }}
 							title="Start task"
 						>
-							<IconPlayerPlay size={12} />
+							<Play size={12} />
 						</button>
 					)}
 					{columnId === "in_progress" && (
 						<span className="p-1 text-[var(--accent-blue)]" title="Running">
-							<IconLoader2 size={12} className="animate-spin" />
+							<Loader2 size={12} className="animate-spin" />
 						</span>
 					)}
 					{columnId === "done" && currentUserAgentId && onArchive && (
@@ -111,7 +111,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
 							style={{ transition: "var(--transition-fast)" }}
 							title="Archive"
 						>
-							<IconArchive size={12} />
+							<Archive size={12} />
 						</button>
 					)}
 				</div>

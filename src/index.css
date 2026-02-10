@@ -5,58 +5,69 @@
 /* Dark-first. Zero noise. Every pixel has purpose. */
 
 :root {
-	/* Background tiers — Light mode (Conductor-inspired) */
-	--background: oklch(0.97 0.005 230);
-	--foreground: oklch(0.15 0.01 250);
-	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.15 0.01 250);
-	--popover: oklch(1 0 0);
-	--popover-foreground: oklch(0.15 0.01 250);
-	--primary: oklch(0.2 0.01 250);
-	--primary-foreground: oklch(0.98 0 0);
-	--secondary: oklch(0.95 0.005 230);
-	--secondary-foreground: oklch(0.25 0.01 250);
-	--muted: oklch(0.93 0.005 230);
-	--muted-foreground: oklch(0.5 0.01 250);
-	--accent: oklch(0.92 0.008 230);
-	--accent-foreground: oklch(0.2 0.01 250);
-	--destructive: oklch(0.55 0.22 25);
+	/* Background tiers — Dark-first (Apple HIG × Codex) */
+	--background: oklch(0.08 0 0);       /* #141414 - Base dark */
+	--foreground: oklch(0.98 0 0);       /* #fafafa - Primary text */
+	
+	/* Card/Surface tiers - Elevation via lightness */
+	--card: oklch(0.12 0 0);             /* #1e1e1e - Card bg */
+	--card-foreground: oklch(0.98 0 0);
+	--popover: oklch(0.12 0 0);
+	--popover-foreground: oklch(0.98 0 0);
+	
+	--primary: oklch(0.98 0 0);
+	--primary-foreground: oklch(0.08 0 0);
+	
+	--secondary: oklch(0.18 0 0);        /* #2c2c2c - Secondary elements */
+	--secondary-foreground: oklch(0.98 0 0);
+	
+	--muted: oklch(0.18 0 0);
+	--muted-foreground: oklch(0.7 0 0);  /* Subtext */
+	
+	--accent: oklch(0.18 0 0);
+	--accent-foreground: oklch(0.98 0 0);
+	
+	--destructive: oklch(0.4 0.15 25);   /* Muted red */
 	--destructive-foreground: oklch(0.98 0 0);
-	--border: oklch(0.88 0.008 230);
-	--input: oklch(0.95 0.005 230);
-	--ring: oklch(0.6 0.15 250);
-	--chart-1: oklch(0.65 0.15 75);
-	--chart-2: oklch(0.55 0.18 260);
-	--chart-3: oklch(0.5 0 0);
-	--chart-4: oklch(0.7 0 0);
-	--chart-5: oklch(0.35 0 0);
-	--sidebar: oklch(0.98 0.003 230);
-	--sidebar-foreground: oklch(0.25 0.01 250);
-	--sidebar-primary: oklch(0.2 0.01 250);
+	
+	--border: oklch(0.22 0 0);           /* Subtle divider */
+	--input: oklch(0.18 0 0);
+	--ring: oklch(0.6 0.15 250);         /* Focus ring blue */
+	
+	--chart-1: oklch(0.6 0.15 250);      /* Blue */
+	--chart-2: oklch(0.65 0.18 150);     /* Green */
+	--chart-3: oklch(0.7 0.18 65);       /* Orange */
+	--chart-4: oklch(0.6 0.18 25);       /* Red */
+	--chart-5: oklch(0.6 0.1 300);       /* Purple */
+	
+	/* Sidebar specific */
+	--sidebar: oklch(0.08 0 0);          /* Match bg for seamless look */
+	--sidebar-foreground: oklch(0.8 0 0);
+	--sidebar-primary: oklch(0.6 0.15 250);
 	--sidebar-primary-foreground: oklch(0.98 0 0);
-	--sidebar-accent: oklch(0.93 0.008 230);
-	--sidebar-accent-foreground: oklch(0.25 0.01 250);
-	--sidebar-border: oklch(0.90 0.005 230);
+	--sidebar-accent: oklch(0.15 0 0);
+	--sidebar-accent-foreground: oklch(0.98 0 0);
+	--sidebar-border: oklch(0.2 0 0);
 	--sidebar-ring: oklch(0.6 0.15 250);
 
-	/* Typography */
-	--font-sans: "Outfit", system-ui, -apple-system, sans-serif;
-	--font-serif: Georgia, serif;
-	--font-mono: "SF Mono", "Fira Code", monospace;
+	/* Typography - Apple-system first */
+	--font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--font-serif: "New York", "Times New Roman", serif;
+	--font-mono: "SF Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-	/* Border radius */
-	--radius: 0.5rem;
+	/* Border radius - iOS rounded */
+	--radius: 0.75rem; /* 12px default */
 
-	/* Semantic accents — ONLY 4 (vivid for light bg) */
-	--accent-green: oklch(0.6 0.2 155);
-	--accent-blue: oklch(0.55 0.2 250);
+	/* Semantic accents — Vivid for Dark Mode */
+	--accent-green: oklch(0.65 0.18 150);
+	--accent-blue: oklch(0.6 0.15 250);
 	--accent-orange: oklch(0.7 0.18 65);
-	--accent-red: oklch(0.55 0.22 25);
+	--accent-red: oklch(0.6 0.18 25);
 
 	/* Layout tokens */
-	--header-height: 52px;
-	--sidebar-left-width: 232px;
-	--sidebar-right-width: 272px;
+	--header-height: 56px; /* 44px + padding */
+	--sidebar-left-width: 260px;
+	--sidebar-right-width: 300px;
 
 	/* Spacing scale (4pt base) */
 	--space-1: 4px;
@@ -69,27 +80,21 @@
 	--space-10: 40px;
 	--space-12: 48px;
 
-	/* Shadows — minimal for dark mode */
-	--shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.2);
-	--shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.25);
-	--shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.3);
-	--shadow: 0px 2px 4px 0px hsl(0 0% 0% / 0.3);
-	--shadow-md: 0px 2px 8px 0px hsl(0 0% 0% / 0.35);
-	--shadow-lg: 0px 4px 12px 0px hsl(0 0% 0% / 0.4);
-	--shadow-xl: 0px 8px 20px 0px hsl(0 0% 0% / 0.5);
-	--shadow-2xl: 0px 12px 32px 0px hsl(0 0% 0% / 0.6);
-	--shadow-x: 0px;
-	--shadow-y: 1px;
-	--shadow-blur: 2px;
-	--shadow-spread: 0px;
-	--shadow-opacity: 0.18;
-	--shadow-color: hsl(0 0% 0%);
-
+	/* Shadows — Depth for dark mode */
+	--shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.3);
+	--shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.3);
+	--shadow-sm: 0px 4px 8px 0px rgba(0,0,0,0.3);
+	--shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+	--shadow-md: 0px 12px 24px 0px rgba(0,0,0,0.3);
+	--shadow-lg: 0px 20px 40px 0px rgba(0,0,0,0.3);
+	--shadow-xl: 0px 32px 64px 0px rgba(0,0,0,0.3);
+	--shadow-2xl: 0px 40px 80px 0px rgba(0,0,0,0.4);
+	
 	/* Transition tokens */
-	--transition-fast: 100ms ease-out;
-	--transition-normal: 200ms ease-out;
-	--transition-smooth: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-	--transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-fast: 150ms ease-out;
+	--transition-normal: 250ms ease-out;
+	--transition-smooth: 350ms cubic-bezier(0.32, 0.72, 0, 1); /* iOS spring-ish */
+	--transition-slow: 500ms cubic-bezier(0.32, 0.72, 0, 1);
 
 	--tracking-normal: 0em;
 	--spacing: 0.25rem;

@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenAgents, onOpenLiveFeed }) => {
 
 	return (
 		<header
-			className="[grid-area:header] flex items-center justify-between px-4 bg-card border-b border-border"
+			className="[grid-area:header] flex items-center justify-between px-4 bg-background/80 backdrop-blur-xl border-b border-border/50 sticky top-0 z-50 supports-[backdrop-filter]:bg-background/60"
 			style={{ zIndex: 10 }}
 		>
 			{/* Left: Brand + mobile menu */}

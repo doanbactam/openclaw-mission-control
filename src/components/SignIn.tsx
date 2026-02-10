@@ -1,5 +1,5 @@
 import { useAuthActions } from "@convex-dev/auth/react";
-import { IconEye, IconEyeOff } from "@tabler/icons-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
 function SignInForm() {
@@ -95,7 +95,7 @@ function SignInForm() {
 									className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
 									style={{ transition: "var(--transition-fast)" }}
 								>
-									{showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+									{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
 								</button>
 							</div>
 						</div>

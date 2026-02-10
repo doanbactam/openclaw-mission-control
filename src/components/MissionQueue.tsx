@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { IconArchive } from "@tabler/icons-react";
+import { Archive } from "lucide-react";
 import { DEFAULT_TENANT_ID } from "../lib/tenant";
 import {
 	DndContext,
@@ -242,7 +242,7 @@ const MissionQueue: React.FC<MissionQueueProps> = ({ selectedTaskId, onSelectTas
 						}`}
 					style={{ transition: "var(--transition-fast)" }}
 				>
-					<IconArchive size={12} />
+					<Archive size={12} />
 					{archivedCount > 0 && (
 						<span className="tabular-nums">{archivedCount}</span>
 					)}

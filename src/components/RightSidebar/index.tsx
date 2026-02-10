@@ -23,7 +23,7 @@ const RightSidebar: React.FC<RightSidebarProps> = ({
 
   return (
     <aside
-      className={`[grid-area:right-sidebar] sidebar-drawer sidebar-drawer--right bg-card border-l border-border flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
+      className={`[grid-area:right-sidebar] sidebar-drawer sidebar-drawer--right bg-background/80 backdrop-blur-xl border-l border-border/50 supports-[backdrop-filter]:bg-background/60 flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
       aria-label="Right sidebar"
     >
       <div className="px-4 py-2.5 border-b border-border flex items-center justify-between">

@@ -12,9 +12,9 @@ type AgentsSidebarProps = {
 };
 
 const levelStyles: Record<string, { bg: string; text: string }> = {
-	LEAD: { bg: "oklch(0.92 0.04 250)", text: "oklch(0.45 0.15 250)" },
-	INT: { bg: "oklch(0.92 0.04 155)", text: "oklch(0.45 0.15 155)" },
-	SPC: { bg: "oklch(0.92 0.03 65)", text: "oklch(0.5 0.12 65)" },
+	LEAD: { bg: "oklch(0.2 0.1 250)", text: "oklch(0.9 0.05 250)" },
+	INT: { bg: "oklch(0.2 0.1 155)", text: "oklch(0.9 0.05 155)" },
+	SPC: { bg: "oklch(0.2 0.1 65)", text: "oklch(0.9 0.05 65)" },
 };
 
 const AgentsSidebar: React.FC<AgentsSidebarProps> = ({
@@ -31,7 +31,7 @@ const AgentsSidebar: React.FC<AgentsSidebarProps> = ({
 	if (agents === undefined) {
 		return (
 			<aside
-				className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-card border-r border-border flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
+				className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-background/80 backdrop-blur-xl border-r border-border/50 supports-[backdrop-filter]:bg-background/60 flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
 				aria-label="Agents"
 			>
 				<div className="px-4 py-3 border-b border-border h-[44px]" />
@@ -52,7 +52,7 @@ const AgentsSidebar: React.FC<AgentsSidebarProps> = ({
 
 	return (
 		<aside
-			className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-card border-r border-border flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
+			className={`[grid-area:left-sidebar] sidebar-drawer sidebar-drawer--left bg-background/80 backdrop-blur-xl border-r border-border/50 supports-[backdrop-filter]:bg-background/60 flex flex-col overflow-hidden ${isOpen ? "is-open" : ""}`}
 			aria-label="Agents"
 		>
 			{/* Header */}

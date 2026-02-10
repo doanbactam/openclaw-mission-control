@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
-import { IconX, IconCheck, IconUser, IconTag, IconMessage, IconClock, IconFileText, IconCopy, IconCalendar, IconArchive, IconPlayerPlay } from "@tabler/icons-react";
+import { X, Check, User, Tag, MessageSquare, Clock, FileText, Copy, Calendar, Archive, Play } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { DEFAULT_TENANT_ID } from "../lib/tenant";
 
@@ -272,7 +272,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
   };
 
   const renderAvatar = (avatar?: string) => {
-    if (!avatar) return <IconUser size={10} />;
+    if (!avatar) return <User size={10} />;
     const isUrl = avatar.startsWith("http") || avatar.startsWith("data:");
     if (isUrl) {
       return <img src={avatar} className="w-full h-full object-cover" alt="avatar" />;
@@ -298,10 +298,9 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
 
   return (
     <div
-      className="fixed inset-y-0 right-0 w-[400px] bg-card border-l border-border flex flex-col"
+      className="fixed inset-y-0 right-0 w-[400px] bg-background/80 backdrop-blur-2xl border-l border-border/50 supports-[backdrop-filter]:bg-background/60 flex flex-col shadow-2xl"
       style={{
         zIndex: 50,
-        boxShadow: "var(--shadow-xl)",
         transition: "transform var(--transition-smooth)",
       }}
     >
@@ -325,7 +324,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
           style={{ transition: "var(--transition-fast)" }}
           aria-label="Close task detail"
         >
-          <IconX size={16} />
+          <X size={16} />
         </button>
       </div>
 
@@ -344,7 +343,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                   key={tag}
                   className="text-[10px] px-2 py-0.5 bg-secondary rounded font-medium text-muted-foreground flex items-center gap-1"
                 >
-                  <IconTag size={10} /> {tag}
+                  <Tag size={10} /> {tag}
                 </span>
               ))}
             </div>
@@ -368,7 +367,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                 style={{ transition: "var(--transition-fast)" }}
                 title={!currentUserAgent ? "User agent not found" : "Mark as Done"}
               >
-                <IconCheck size={14} />
+                <Check size={14} />
                 Done
               </button>
             )}
@@ -387,7 +386,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                 style={{ transition: "var(--transition-fast)" }}
                 title={!currentUserAgent ? "User agent not found" : "Archive Task"}
               >
-                <IconArchive size={14} />
+                <Archive size={14} />
                 Archive
               </button>
             )}
@@ -479,7 +478,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                     className="hover:text-[var(--accent-red)] disabled:opacity-50 disabled:cursor-not-allowed text-muted-foreground"
                     style={{ transition: "var(--transition-fast)" }}
                   >
-                    <IconX size={12} />
+                    <X size={12} />
                   </button>
                 </div>
               );
@@ -530,7 +529,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                   style={{ transition: "var(--transition-fast)" }}
                 >
                   <div className="flex items-center gap-2 overflow-hidden">
-                    <IconFileText size={14} className="text-muted-foreground shrink-0" />
+                    <FileText size={14} className="text-muted-foreground shrink-0" />
                     <div className="flex flex-col min-w-0">
                       <span className="truncate text-foreground font-medium text-xs">{doc.title}</span>
                       {doc.path && <span className="text-[10px] text-muted-foreground truncate font-mono">{doc.path}</span>}
@@ -588,7 +587,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                               key={attachmentId}
                               className="text-[10px] px-2 py-0.5 bg-muted rounded border border-border text-muted-foreground flex items-center gap-1"
                             >
-                              <IconFileText size={10} />
+                              <FileText size={10} />
                               <span className="font-medium">{doc?.title || "Attachment"}</span>
                               {doc?.path && (
                                 <span className="text-[9px] text-muted-foreground font-mono truncate max-w-[120px]">
@@ -617,8 +616,8 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                     onClick={() => toggleAttachment(doc._id)}
                     disabled={!currentUserAgent}
                     className={`text-[10px] px-2 py-0.5 rounded border ${isSelected
-                        ? "bg-[var(--accent-blue)] text-foreground border-[var(--accent-blue)]"
-                        : "bg-secondary text-muted-foreground border-border hover:bg-accent"
+                      ? "bg-[var(--accent-blue)] text-foreground border-[var(--accent-blue)]"
+                      : "bg-secondary text-muted-foreground border-border hover:bg-accent"
                       } disabled:opacity-50`}
                     style={{ transition: "var(--transition-fast)" }}
                   >
@@ -638,14 +637,14 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                     key={id}
                     className="text-[10px] px-2 py-0.5 bg-secondary rounded text-muted-foreground flex items-center gap-1"
                   >
-                    <IconFileText size={10} />
+                    <FileText size={10} />
                     <span className="font-medium">{doc?.title || "Attachment"}</span>
                     <button
                       onClick={() => toggleAttachment(id)}
                       className="hover:text-foreground"
                       title="Remove attachment"
                     >
-                      <IconX size={10} />
+                      <X size={10} />
                     </button>
                   </div>
                 );
@@ -730,7 +729,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
                   className="px-4 py-2 text-xs bg-[var(--accent-green)] text-primary-foreground rounded-lg font-semibold hover:opacity-90 disabled:opacity-50 flex items-center gap-1.5"
                   style={{ transition: "var(--transition-fast)" }}
                 >
-                  <IconPlayerPlay size={14} />
+                  <Play size={14} />
                   Resume
                 </button>
               )}
@@ -742,19 +741,19 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
         <div className="mt-auto pt-4 border-t border-border flex flex-col gap-2">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
-              <IconClock size={12} />
+              <Clock size={12} />
               <span>{formatCreationDate(task._creationTime)}</span>
             </div>
             {lastUpdated && (
               <div className="flex items-center gap-1.5">
-                <IconCalendar size={12} />
+                <Calendar size={12} />
                 <span>{formatCreationDate(lastUpdated)}</span>
               </div>
             )}
           </div>
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1.5">
-              <IconMessage size={12} />
+              <MessageSquare size={12} />
               <span>{messages?.length || 0} comments</span>
             </div>
             <div
@@ -766,7 +765,7 @@ const TaskDetailPanel: React.FC<TaskDetailPanelProps> = ({ taskId, onClose, onPr
               title="Copy Task ID"
             >
               <span className="tabular-nums font-mono">ID: {task._id.slice(-6)}</span>
-              <IconCopy size={12} />
+              <Copy size={12} />
             </div>
           </div>
         </div>
